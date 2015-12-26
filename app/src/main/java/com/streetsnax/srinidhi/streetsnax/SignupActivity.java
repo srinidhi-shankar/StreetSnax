@@ -1,17 +1,17 @@
 package com.streetsnax.srinidhi.streetsnax;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-//import butterknife.ButterKnife;
-//import butterknife.Bind;
 
 public class SignupActivity extends AppCompatActivity {
     private static final String TAG = "SignupActivity";
@@ -27,8 +27,8 @@ public class SignupActivity extends AppCompatActivity {
         //ButterKnife.bind(this);
 
         _nameText = (EditText) findViewById(R.id.input_name);
-        _nameText = (EditText) findViewById(R.id.input_email);
-        _nameText = (EditText) findViewById(R.id.input_password);
+        _emailText = (EditText) findViewById(R.id.input_email);
+        _passwordText = (EditText) findViewById(R.id.input_password);
         _signupButton = (Button) findViewById(R.id.btn_signup);
         _loginLink = (TextView) findViewById(R.id.link_login);
 
@@ -36,6 +36,7 @@ public class SignupActivity extends AppCompatActivity {
         _signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hidekeyboard();
                 signup();
             }
         });
@@ -70,6 +71,7 @@ public class SignupActivity extends AppCompatActivity {
         String password = _passwordText.getText().toString();
 
         // TODO: Implement your own signup logic here.
+        // TODO: connect do DB and insert there.
 
         new android.os.Handler().postDelayed(
                 new Runnable() {
@@ -79,6 +81,7 @@ public class SignupActivity extends AppCompatActivity {
                         onSignupSuccess();
                         // onSignupFailed();
                         progressDialog.dismiss();
+                        _signupButton.setEnabled(true);
                     }
                 }, 3000);
     }
@@ -96,7 +99,23 @@ public class SignupActivity extends AppCompatActivity {
         _signupButton.setEnabled(true);
     }
 
+    public void hidekeyboard() {
+
+        try {
+            InputMethodManager inputManager =
+                    (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputManager.hideSoftInputFromWindow(
+                    this.getCurrentFocus().getWindowToken(),
+                    InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+        catch(NullPointerException ex){
+            ex.printStackTrace();
+        }
+    }
+
     public boolean validate() {
+
+        Log.d("in validate", "first line");
         boolean valid = true;
 
         String name = _nameText.getText().toString();
