@@ -151,20 +151,20 @@ public class LoginActivity extends AppCompatActivity {
         private Users userRecords;
 
         public GetLoginInfoTask() {
-            callerName = "getLoginInfoTask";
+            callerName = "getLoginInfoTask";//any name
 
-            serviceName = AppConstants.DB_SVC;
-            endPoint = "Users";
+            serviceName = AppConstants.DB_SVC; //dreamfactory service base url
+            endPoint = "Users"; //db table
 
-            verb = "GET";
+            verb = "GET"; //type of request
 
             queryParams = new HashMap<>();
             // filter to only the contact_info records related to the contact
-            queryParams.put("filter", "email=" + email + "%20AND%20password=" + password + "");
+            queryParams.put("filter", "email=" + email + "%20AND%20password=" + password + ""); //where conditions
 
             // include API key and sessionToken
-            applicationApiKey = AppConstants.API_KEY;
-            sessionToken = PrefUtil.getString(getApplicationContext(), AppConstants.SESSION_TOKEN);
+            applicationApiKey = AppConstants.API_KEY; //api key required to get the data
+            sessionToken = PrefUtil.getString(getApplicationContext(), AppConstants.SESSION_TOKEN); //sessiontoken
         }
 
         @Override
