@@ -8,10 +8,21 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/txtViewDefault"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="hello_world" />
+
+    <ImageButton
+        android:id="@+id/ibplus"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_gravity="right|bottom"
+        android:layout_margin="15dp"
+        android:background="@drawable/btnselector"
+        android:src="@drawable/plus"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="65dp"
+        android:layout_marginRight="25dp"
+        android:elevation="3dp"
+         />
+
 
 </RelativeLayout>

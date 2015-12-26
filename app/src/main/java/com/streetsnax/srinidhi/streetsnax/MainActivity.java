@@ -6,11 +6,17 @@ import android.content.Intent;
 //import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
 
 
 public class MainActivity extends AppCompatActivity {
+
+
+    ImageButton FAB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +26,18 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
+
+
+        FAB = (ImageButton) findViewById(R.id.ibplus);
+
+
+        FAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, AddSnackPlace.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
