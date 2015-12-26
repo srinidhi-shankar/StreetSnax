@@ -3,7 +3,6 @@ package com.streetsnax.srinidhi.streetsnax;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -14,11 +13,20 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.streetsnax.srinidhi.streetsnax.models.Users;
+
+import java.util.HashMap;
+
+import dfapi.ApiException;
+import dfapi.ApiInvoker;
+import dfapi.BaseAsyncRequest;
+
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     private static final int REQUEST_SIGNUP = 0;
-
+    public String email;
+    public String password;
     EditText _emailText, _passwordText;
     Button _loginButton;
     TextView _signupLink;
@@ -66,11 +74,11 @@ public class LoginActivity extends AppCompatActivity {
         progressDialog.setMessage("Authenticating...");
         progressDialog.show();
 
-        final String email = _emailText.getText().toString();
-        final String password = _passwordText.getText().toString();
+        email = _emailText.getText().toString();
+        password = _passwordText.getText().toString();
 
         // TODO: Implement your own authentication logic here.
-        new LongAsyncDBOperation().execute(email, password);
+        new GetLoginInfoTask().execute();
     }
 
 
@@ -110,8 +118,7 @@ public class LoginActivity extends AppCompatActivity {
             inputManager.hideSoftInputFromWindow(
                     this.getCurrentFocus().getWindowToken(),
                     InputMethodManager.HIDE_NOT_ALWAYS);
-        }
-        catch(NullPointerException ex){
+        } catch (NullPointerException ex) {
             ex.printStackTrace();
         }
     }
@@ -139,28 +146,49 @@ public class LoginActivity extends AppCompatActivity {
         return valid;
     }
 
-    public class LongAsyncDBOperation extends AsyncTask<Object, Void, Boolean> {
+    public class GetLoginInfoTask extends BaseAsyncRequest {
 
-        @Override
-        protected Boolean doInBackground(Object... params) {
-            String email = (String) params[0];
-            String password = (String) params[1];
-            return DBHelper.ValidateUser(email, password);
+        private Users userRecords;
+
+        public GetLoginInfoTask() {
+            callerName = "getLoginInfoTask";
+
+            serviceName = AppConstants.DB_SVC;
+            endPoint = "Users";
+
+            verb = "GET";
+
+            queryParams = new HashMap<>();
+            // filter to only the contact_info records related to the contact
+            queryParams.put("filter", "email=" + email + "%20AND%20password=" + password + "");
+
+            // include API key and sessionToken
+            applicationApiKey = AppConstants.API_KEY;
+            sessionToken = PrefUtil.getString(getApplicationContext(), AppConstants.SESSION_TOKEN);
         }
 
         @Override
-        protected void onPostExecute(Boolean result) {
-            if (result)
-                onLoginSuccess();
-            else
-                onLoginFailed();
-            progressDialog.dismiss();
-            _loginButton.setEnabled(true);
+        protected void processResponse(String response) throws ApiException {
+            // results come back as an array of contact_info records
+            // form is:
+            // {
+            //      "resource":[
+            //          { contactInfoRecord }
+            //      ]
+            // }
+            userRecords = (Users) ApiInvoker.deserialize(response, "", Users.class);
         }
 
         @Override
-        protected void onProgressUpdate(Void... values) {
+        protected void onCompletion(boolean success) {
+            if (success) {
+                if (userRecords.userRecord.size() > 0)
+                    onLoginSuccess();
+                else
+                    onLoginFailed();
+                progressDialog.dismiss();
+                _loginButton.setEnabled(true);
+            }
         }
-
     }
 }
