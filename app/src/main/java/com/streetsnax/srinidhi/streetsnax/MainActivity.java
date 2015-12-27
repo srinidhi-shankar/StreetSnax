@@ -23,9 +23,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
+            //uncomment this later while commiting to GIT
+//        Intent intent = new Intent(this, LoginActivity.class);
+//        startActivity(intent);
 
 
         FAB = (ImageButton) findViewById(R.id.ibplus);

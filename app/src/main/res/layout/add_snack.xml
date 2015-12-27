@@ -4,12 +4,19 @@
     android:layout_height="match_parent"
     android:weightSum="1">
 
-    <TextView
-        android:layout_width="316dp"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        />
+
+    <com.streetsnax.srinidhi.streetsnax.MultiSelectionSpinner
+        android:id="@+id/mySpinner"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Add a snack here"
-        android:id="@+id/tvaddsnack"
-        android:layout_gravity="right"
-        android:layout_weight="0.16"
-        android:textSize="50dp" />
+        />
+
 </LinearLayout>
