@@ -160,7 +160,7 @@ public class LoginActivity extends AppCompatActivity {
 
             queryParams = new HashMap<>();
             // filter to only the contact_info records related to the contact
-            queryParams.put("filter", "email=" + email + "%20AND%20password=" + password + ""); //where conditions
+            queryParams.put("filter", "email=" + email.trim() + "%20AND%20password=" + password.trim() + ""); //where conditions
 
             // include API key and sessionToken
             applicationApiKey = AppConstants.API_KEY; //api key required to get the data
@@ -176,7 +176,14 @@ public class LoginActivity extends AppCompatActivity {
             //          { contactInfoRecord }
             //      ]
             // }
-            userRecords = (Users) ApiInvoker.deserialize(response, "", Users.class);
+            userRecords = new Users();
+            Log.v("JSONResponse", response.trim());
+            String JsonTestResponse = "{\"resource\":[]}";
+            Log.v("JSONTestResponse", JsonTestResponse);
+            if (!response.trim().equals(JsonTestResponse)) {
+                Log.v("JSONResponse", "true");
+                userRecords = (Users) ApiInvoker.deserialize(response, "", Users.class);
+            }
         }
 
         @Override
