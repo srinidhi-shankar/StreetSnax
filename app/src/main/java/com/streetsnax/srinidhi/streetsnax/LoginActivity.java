@@ -14,7 +14,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.streetsnax.srinidhi.streetsnax.models.Users;
+import com.streetsnax.srinidhi.streetsnax.utilities.PasswordHash;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.HashMap;
 
 import dfapi.ApiException;
@@ -160,7 +163,7 @@ public class LoginActivity extends AppCompatActivity {
 
             queryParams = new HashMap<>();
             // filter to only the contact_info records related to the contact
-            queryParams.put("filter", "email=" + email.trim() + "%20AND%20password=" + password.trim() + ""); //where conditions
+            queryParams.put("filter", "email=" + email.trim()); //where conditions
 
             // include API key and sessionToken
             applicationApiKey = AppConstants.API_KEY; //api key required to get the data
@@ -189,7 +192,19 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected void onCompletion(boolean success) {
             if (success) {
-                if (userRecords.userRecord.size() > 0)
+                Boolean isValidUser = false;
+                if (userRecords.userRecord.size() > 0) {
+                    try {
+                        String existingPassword = userRecords.userRecord.get(0).Password;
+                        if (PasswordHash.validatePassword(password, existingPassword))
+                            isValidUser = true;
+                    } catch (NoSuchAlgorithmException e) {
+                        e.printStackTrace();
+                    } catch (InvalidKeySpecException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (isValidUser)
                     onLoginSuccess();
                 else
                     onLoginFailed();

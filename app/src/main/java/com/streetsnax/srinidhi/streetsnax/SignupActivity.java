@@ -14,7 +14,10 @@ import android.widget.Toast;
 
 import com.streetsnax.srinidhi.streetsnax.models.User;
 import com.streetsnax.srinidhi.streetsnax.models.Users;
+import com.streetsnax.srinidhi.streetsnax.utilities.PasswordHash;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.HashMap;
 
 import dfapi.ApiException;
@@ -172,7 +175,7 @@ public class SignupActivity extends AppCompatActivity {
 
             queryParams = new HashMap<>();
             // filter to only the contact_info records related to the contact
-            queryParams.put("filter", "email=" + signUpemail + "%20AND%20password=" + signUppassword + ""); //where conditions
+            queryParams.put("filter", "email=" + signUpemail); //where conditions
 
             // include API key and sessionToken
             applicationApiKey = AppConstants.API_KEY; //api key required to get the data
@@ -220,31 +223,38 @@ public class SignupActivity extends AppCompatActivity {
 
         @Override
         protected void doSetup() throws ApiException {
-            callerName = "getLoginInfoTask";//any name
+            try {
+                callerName = "getLoginInfoTask";//any name
 
-            serviceName = AppConstants.DB_SVC; //dreamfactory service base url
-            endPoint = "Users"; //db table
+                serviceName = AppConstants.DB_SVC; //dreamfactory service base url
+                endPoint = "Users"; //db table
 
-            verb = "POST"; //type of request
+                verb = "POST"; //type of request
 
-            // build user record, don't have id yet so can't provide one
-            User userRecord = new User();
-            userRecord.UserName = signUpname;
-            userRecord.Email = signUpemail;
-            userRecord.Password = signUppassword;
-            userRecord.Active = true;
-            userRecord.TypeOfLogin = 0;
+                // build user record, don't have id yet so can't provide one
+                User userRecord = new User();
+                userRecord.UserName = signUpname;
+                userRecord.Email = signUpemail;
+                userRecord.Password = PasswordHash.createHash(signUppassword);
+                userRecord.Active = true;
+                userRecord.TypeOfLogin = 0;
 
-            requestString = ApiInvoker.serialize(userRecord);
-            queryParams = new HashMap<>();
-            // filter to only the contact_info records related to the contact
-            queryParams.put("id_field", "UserID");
-            queryParams.put("fields", "*");
+                requestString = ApiInvoker.serialize(userRecord);
+                queryParams = new HashMap<>();
+                // filter to only the contact_info records related to the contact
+                queryParams.put("id_field", "UserID");
+                queryParams.put("fields", "*");
 
-            Log.v("APIRequestString", requestString);
-            // include API key and sessionToken
-            applicationApiKey = AppConstants.API_KEY; //api key required to get the data
-            sessionToken = PrefUtil.getString(getApplicationContext(), AppConstants.SESSION_TOKEN); //sessiontoken
+                Log.v("APIRequestString", requestString);
+                // include API key and sessionToken
+                applicationApiKey = AppConstants.API_KEY; //api key required to get the data
+                sessionToken = PrefUtil.getString(getApplicationContext(), AppConstants.SESSION_TOKEN); //sessiontoken
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (InvalidKeySpecException e) {
+                e.printStackTrace();
+            }
+
         }
 
         @Override
