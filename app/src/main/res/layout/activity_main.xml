@@ -8,20 +8,25 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity">
 
+    <Button
+        android:id="@+id/btnSearch"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/app_bar_height"
+        android:text="Search" />
 
     <ImageButton
         android:id="@+id/ibplus"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:layout_gravity="right|bottom"
-        android:layout_margin="15dp"
-        android:background="@drawable/btnselector"
-        android:src="@drawable/plus"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
+        android:layout_gravity="right|bottom"
+        android:layout_margin="15dp"
         android:layout_marginBottom="65dp"
         android:layout_marginRight="25dp"
+        android:background="@drawable/btnselector"
         android:elevation="3dp"
+        android:src="@drawable/plus"
          />
 
 
