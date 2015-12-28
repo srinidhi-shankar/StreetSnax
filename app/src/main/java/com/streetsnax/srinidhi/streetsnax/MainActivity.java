@@ -2,12 +2,12 @@ package com.streetsnax.srinidhi.streetsnax;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 
 //import android.support.v7.app.ActionBarActivity;
 
@@ -15,7 +15,7 @@ import android.widget.ImageButton;
 public class MainActivity extends AppCompatActivity {
 
 
-    ImageButton FAB;
+    FloatingActionButton FAB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
 
 
-        FAB = (ImageButton) findViewById(R.id.ibplus);
+        FAB = (FloatingActionButton) findViewById(R.id.ibplus);
 
 
         FAB.setOnClickListener(new View.OnClickListener() {
