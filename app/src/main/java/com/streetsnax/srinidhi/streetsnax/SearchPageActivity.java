@@ -48,7 +48,6 @@ import java.util.List;
 import dfapi.ApiException;
 import dfapi.ApiInvoker;
 import dfapi.BaseAsyncRequest;
-
 public class SearchPageActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
@@ -118,7 +117,6 @@ public class SearchPageActivity extends AppCompatActivity
         });
 
         snackSpinnerText.setInputType(InputType.TYPE_NULL);
-
 //        snackSpinnerText.setFilters(new InputFilter[]
 //                {
 //                        new InputFilter() {
@@ -217,8 +215,23 @@ public class SearchPageActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.search_page, menu);
+
+//        MenuItem myActionMenuItem = menu.findItem( R.id.action_search);
+//        SearchView searchView = (SearchView) myActionMenuItem.getActionView();
+//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String s) {
+//                // UserFeedback.show( "SearchOnQueryTextChanged: " + s);
+//                return false;
+//            }
+//        });
         return true;
     }
 
@@ -308,6 +321,7 @@ public class SearchPageActivity extends AppCompatActivity
             mGoogleApiClient.disconnect();
         }
     }
+
 
     public void hidekeyboard() {
 

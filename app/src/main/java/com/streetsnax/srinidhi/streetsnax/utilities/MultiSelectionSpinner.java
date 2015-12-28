@@ -30,7 +30,7 @@ public class MultiSelectionSpinner extends Spinner implements
         simple_adapter = new ArrayAdapter<>(context,
                 R.layout.spinner_item);
         super.setAdapter(simple_adapter);
-        alertbuilder = new AlertDialog.Builder(getContext());
+        alertbuilder = new AlertDialog.Builder(getContext(), R.style.MyTransparentDialog);
     }
 
     public MultiSelectionSpinner(Context context, AttributeSet attrs) {
@@ -39,7 +39,7 @@ public class MultiSelectionSpinner extends Spinner implements
         simple_adapter = new ArrayAdapter<>(context,
                 R.layout.spinner_item);
         super.setAdapter(simple_adapter);
-        alertbuilder = new AlertDialog.Builder(getContext());
+        alertbuilder = new AlertDialog.Builder(getContext(),R.style.MyTransparentDialog);
     }
 
     public void onClick(DialogInterface dialog, int which, boolean isChecked) {
