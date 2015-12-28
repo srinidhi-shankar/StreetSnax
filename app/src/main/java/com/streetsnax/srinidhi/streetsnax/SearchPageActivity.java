@@ -12,17 +12,15 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.InputType;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -54,35 +52,31 @@ public class SearchPageActivity extends AppCompatActivity
     private static final LatLngBounds BOUNDS_INDIA = new LatLngBounds(
             new LatLng(-0, 0), new LatLng(0, 0));
     protected GoogleApiClient mGoogleApiClient;
-    ImageView delete;
-    ImageView deleteSnack;
-    private EditText mAutocompleteView;
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
     private PlacesAutoCompleteAdapter mAutoCompleteAdapter;
     private MultiSelectionSpinner multiSelectionSpinner;
-    private EditText snackSpinnerText;
+    private RelativeLayout searchLayoutView;
+    private MenuItem myActionMenuItem;
+    private TextView textViewTitle;
+    private RelativeLayout snackLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         buildGoogleApiClient();
         setContentView(R.layout.activity_search_page);
-        mAutocompleteView = (EditText) findViewById(R.id.autocomplete_places);
-        snackSpinnerText = (EditText) findViewById(R.id.snackSpinnerText);
-        snackSpinnerText.setVisibility(View.INVISIBLE);
+        searchLayoutView = (RelativeLayout) findViewById(R.id.searchLayoutView);
+        textViewTitle = (TextView) findViewById(R.id.textViewTitle);
+        snackLayout = (RelativeLayout) findViewById(R.id.snackLayout);
+        searchLayoutView.setVisibility(View.INVISIBLE);
 
-        delete = (ImageView) findViewById(R.id.cross);
-        deleteSnack = (ImageView) findViewById(R.id.snackcross);
-        deleteSnack.setVisibility(View.INVISIBLE);
         mAutoCompleteAdapter = new PlacesAutoCompleteAdapter(this, R.layout.searchview_adapter,
                 mGoogleApiClient, BOUNDS_INDIA, null);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         mLinearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         mRecyclerView.setAdapter(mAutoCompleteAdapter);
-        delete.setOnClickListener(this);
-        deleteSnack.setOnClickListener(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -91,53 +85,14 @@ public class SearchPageActivity extends AppCompatActivity
         multiSelectionSpinner.setVisibility(View.INVISIBLE);
         mRecyclerView.setVisibility(View.INVISIBLE);
 
-        mAutocompleteView.addTextChangedListener(new TextWatcher() {
-
-            public void onTextChanged(CharSequence s, int start, int before,
-                                      int count) {
-                mRecyclerView.setVisibility(View.VISIBLE);
-                if (!s.toString().equals("") && mGoogleApiClient.isConnected()) {
-                    mAutoCompleteAdapter.getFilter().filter(s.toString());
-                } else if (!mGoogleApiClient.isConnected()) {
-                    Toast.makeText(getApplicationContext(), AppConstants.API_NOT_CONNECTED, Toast.LENGTH_SHORT).show();
-                    Log.e(AppConstants.PlacesTag, AppConstants.API_NOT_CONNECTED);
-                }
-
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count,
-                                          int after) {
-                snackSpinnerText.setVisibility(View.INVISIBLE);
-                deleteSnack.setVisibility(View.INVISIBLE);
-            }
-
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
-        snackSpinnerText.setInputType(InputType.TYPE_NULL);
-//        snackSpinnerText.setFilters(new InputFilter[]
-//                {
-//                        new InputFilter() {
-//                            public CharSequence filter(CharSequence src, int start,
-//                                                       int end, Spanned dst, int dstart, int dend) {
-//                                return src.length() < 1 ? dst.subSequence(dstart, dend) : "";
-//                            }
-//                        }
-//                });
-        snackSpinnerText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                multiSelectionSpinner.performClick();
-            }
-        });
-
         multiSelectionSpinner.alertbuilder.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(final DialogInterface dialog) {
                 //Do some work
-                snackSpinnerText.setText(multiSelectionSpinner.getSelectedItemsAsString());
+                textViewTitle.setText(multiSelectionSpinner.getSelectedItemsAsString());
+                searchLayoutView.setVisibility(View.INVISIBLE);
+                //getActionBar().show();
+
             }
         });
         mRecyclerView.addOnItemTouchListener(
@@ -160,10 +115,15 @@ public class SearchPageActivity extends AppCompatActivity
                                 if (places.getCount() == 1) {
                                     //Do the things here on Click.....
                                     //Toast.makeText(getApplicationContext(), String.valueOf(places.get(0).getLatLng()), Toast.LENGTH_SHORT).show();
-                                    mAutocompleteView.setText(String.valueOf(places.get(0).getAddress()));
+                                    //mAutocompleteView.setText(String.valueOf(places.get(0).getAddress()));
+                                    SearchView searchView = (SearchView) myActionMenuItem.getActionView();
+                                    searchView.setQuery(places.get(0).getAddress(), false);
+                                    myActionMenuItem.collapseActionView();
+                                    setTitle(places.get(0).getName());
+                                    searchView.clearFocus();
+                                    textViewTitle.setVisibility(View.VISIBLE);
+                                    snackLayout.setVisibility(View.VISIBLE);
                                     mRecyclerView.setVisibility(View.INVISIBLE);
-                                    snackSpinnerText.setVisibility(View.VISIBLE);
-                                    deleteSnack.setVisibility(View.VISIBLE);
                                 } else {
                                     mRecyclerView.setVisibility(View.VISIBLE);
                                     Toast.makeText(getApplicationContext(), AppConstants.SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show();
@@ -182,6 +142,12 @@ public class SearchPageActivity extends AppCompatActivity
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+            }
+        });
+        textViewTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                multiSelectionSpinner.performClick();
             }
         });
 
@@ -216,22 +182,43 @@ public class SearchPageActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.search_page, menu);
+        myActionMenuItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) myActionMenuItem.getActionView();
+        searchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchLayoutView.setVisibility(View.VISIBLE);
+                snackLayout.setVisibility(View.INVISIBLE);
+            }
+        });
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                callSearch(query);
+                return true;
+            }
 
-//        MenuItem myActionMenuItem = menu.findItem( R.id.action_search);
-//        SearchView searchView = (SearchView) myActionMenuItem.getActionView();
-//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String s) {
-//                // UserFeedback.show( "SearchOnQueryTextChanged: " + s);
-//                return false;
-//            }
-//        });
+            @Override
+            public boolean onQueryTextChange(String newText) {
+//              if (searchView.isExpanded() && TextUtils.isEmpty(newText)) {
+                callSearch(newText);
+//              }
+                return true;
+            }
+
+            public void callSearch(String query) {
+                //Do searching
+                mRecyclerView.setVisibility(View.VISIBLE);
+                if (!query.toString().equals("") && mGoogleApiClient.isConnected()) {
+                    mAutoCompleteAdapter.getFilter().filter(query.toString());
+                } else if (!mGoogleApiClient.isConnected()) {
+                    Toast.makeText(getApplicationContext(), AppConstants.API_NOT_CONNECTED, Toast.LENGTH_SHORT).show();
+                    Log.e(AppConstants.PlacesTag, AppConstants.API_NOT_CONNECTED);
+                }
+            }
+
+        });
+
         return true;
     }
 
@@ -295,13 +282,10 @@ public class SearchPageActivity extends AppCompatActivity
 
     @Override
     public void onClick(View v) {
-        if (v == delete) {
-            mAutocompleteView.setText("");
-        }
-        if (v == deleteSnack) {
-            snackSpinnerText.setText("");
-            multiSelectionSpinner.setSelection(0);
-        }
+//        if (v == deleteSnack) {
+//            textViewTitle.setText("");
+//            multiSelectionSpinner.setSelection(0);
+//        }
     }
 
     @Override

@@ -10,79 +10,57 @@
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/primary_darker"
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/primary_darker"
             app:popupTheme="@style/AppTheme.PopupOverlay"></android.support.v7.widget.Toolbar>
 
+        <RelativeLayout
+            android:id="@+id/snackLayout"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@color/primary_dark"
+            android:visibility="invisible">
+
+            <TextView
+                android:id="@+id/textViewTitle"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="10dp"
+                android:drawableLeft="@drawable/search"
+                android:drawablePadding="10dp"
+                android:drawableTint="@color/white"
+                android:ellipsize="marquee"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:gravity="left"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:text="Choose snacks.."
+                android:textColor="@color/white"
+                android:visibility="invisible" />
+        </RelativeLayout>
     </android.support.design.widget.AppBarLayout>
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/searchLayoutView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-
-        <EditText
-            android:id="@+id/autocomplete_places"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="60dp"
-            android:background="@drawable/edit_text_style"
-            android:drawableLeft="@drawable/search"
-            android:drawablePadding="9dp"
-            android:hint="@string/autocomplete_hint"
-            android:paddingLeft="8dp"
-            android:paddingRight="9dp"
-            android:singleLine="true"
-            android:textColor="@android:color/primary_text_light"
-            android:textColorHint="@color/grey" />
-
-        <ImageView
-            android:id="@+id/cross"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="80dp"
-            android:src="@drawable/cross" />
-
-        <EditText
-            android:id="@+id/snackSpinnerText"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_below="@+id/autocomplete_places"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/edit_text_style"
-            android:drawableLeft="@drawable/search"
-            android:drawablePadding="9dp"
-            android:focusable="false"
-            android:hint="Choose snacks"
-            android:paddingLeft="8dp"
-            android:paddingRight="9dp"
-            android:textColor="@android:color/primary_text_light"
-            android:textColorHint="@color/grey" />
-
-        <ImageView
-            android:id="@+id/snackcross"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="130dp"
-            android:src="@drawable/cross" />
 
         <com.streetsnax.srinidhi.streetsnax.utilities.MultiSelectionSpinner
             android:id="@+id/mySpinner"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_below="@+id/snackSpinnerText"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:background="@drawable/edit_text_style"
@@ -99,8 +77,7 @@
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/autocomplete_places"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="95dp"
             android:scrollbars="vertical" />
 
     </RelativeLayout>
@@ -114,6 +91,7 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         android:background="@drawable/btnselector"
-        android:src="@drawable/plus" />
+        android:src="@drawable/plus"
+        app:backgroundTint="@color/primary" />
 
 </android.support.design.widget.CoordinatorLayout>
