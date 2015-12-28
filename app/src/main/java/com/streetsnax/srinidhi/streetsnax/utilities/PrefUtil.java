@@ -1,4 +1,4 @@
-package com.streetsnax.srinidhi.streetsnax;
+package com.streetsnax.srinidhi.streetsnax.utilities;
 
 import android.content.Context;
 import android.content.SharedPreferences;

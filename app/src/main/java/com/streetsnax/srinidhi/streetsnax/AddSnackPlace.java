@@ -1,20 +1,18 @@
 package com.streetsnax.srinidhi.streetsnax;
 
 
-import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
 import android.view.MenuItem;
-import android.widget.ImageView;
 
 import com.streetsnax.srinidhi.streetsnax.models.Snack;
 import com.streetsnax.srinidhi.streetsnax.models.Snacks;
-import com.streetsnax.srinidhi.streetsnax.models.Users;
+import com.streetsnax.srinidhi.streetsnax.utilities.AppConstants;
+import com.streetsnax.srinidhi.streetsnax.utilities.MultiSelectionSpinner;
+import com.streetsnax.srinidhi.streetsnax.utilities.PrefUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -25,8 +23,8 @@ import dfapi.BaseAsyncRequest;
 
 public class AddSnackPlace extends AppCompatActivity {
 
-    private MultiSelectionSpinner multiSelectionSpinner;
     ProgressDialog progressDialog;
+    private MultiSelectionSpinner multiSelectionSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +54,19 @@ public class AddSnackPlace extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void createSpinner(List<Snack> snackRecords) {
+        String[] snackArray = new String[snackRecords.size()];
+        int count = 0;
+        for (Snack snack : snackRecords) {
+            snackArray[count++] = snack.SnackType;
+        }
+
+        //String[] array = {"one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "six", "seven", "eight", "nine", "ten"};
+        multiSelectionSpinner = (MultiSelectionSpinner) findViewById(R.id.mySpinner);
+        multiSelectionSpinner.setItems(snackArray);
+        //multiSelectionSpinner.setSelection(new int[]{2, 6});
     }
 
     public class GetLoginInfoTask extends BaseAsyncRequest {
@@ -103,17 +114,4 @@ public class AddSnackPlace extends AppCompatActivity {
             }
         }
     }
-
-   public void createSpinner(List<Snack> snackRecords){
-       String[] snackArray = new String[snackRecords.size()];
-       int count=0;
-       for(Snack snack:snackRecords){
-         snackArray[count++] = snack.SnackType;
-       }
-
-       //String[] array = {"one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "six", "seven", "eight", "nine", "ten"};
-       multiSelectionSpinner = (MultiSelectionSpinner) findViewById(R.id.mySpinner);
-       multiSelectionSpinner.setItems(snackArray);
-       //multiSelectionSpinner.setSelection(new int[]{2, 6});
-   }
 }

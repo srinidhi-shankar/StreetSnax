@@ -1,4 +1,4 @@
-package com.streetsnax.srinidhi.streetsnax;
+package com.streetsnax.srinidhi.streetsnax.utilities;
 
 /**
  * Created by I15230 on 12/26/2015.

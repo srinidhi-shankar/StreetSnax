@@ -1,4 +1,4 @@
-package com.streetsnax.srinidhi.streetsnax;
+package com.streetsnax.srinidhi.streetsnax.utilities;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -8,6 +8,8 @@ import android.util.AttributeSet;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
+
+import com.streetsnax.srinidhi.streetsnax.R;
 
 import java.util.Arrays;
 import java.util.LinkedList;
