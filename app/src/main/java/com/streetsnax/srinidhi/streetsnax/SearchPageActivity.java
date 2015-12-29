@@ -19,6 +19,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.HorizontalScrollView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -60,7 +62,8 @@ public class SearchPageActivity extends AppCompatActivity
     private MenuItem myActionMenuItem;
     private TextView textViewTitle;
     private RelativeLayout snackLayout;
-
+    private HorizontalScrollView snackHorizontalScrollView;
+    private LinearLayout snackLayoutLinear;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +73,9 @@ public class SearchPageActivity extends AppCompatActivity
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
         snackLayout = (RelativeLayout) findViewById(R.id.snackLayout);
         searchLayoutView.setVisibility(View.INVISIBLE);
+        snackHorizontalScrollView = (HorizontalScrollView) findViewById(R.id.snackHorizontalScrollView);
+        snackHorizontalScrollView.setVisibility(View.INVISIBLE);
+        snackLayoutLinear = (LinearLayout) findViewById(R.id.snackLayoutLinear);
 
         mAutoCompleteAdapter = new PlacesAutoCompleteAdapter(this, R.layout.searchview_adapter,
                 mGoogleApiClient, BOUNDS_INDIA, null);
@@ -90,7 +96,31 @@ public class SearchPageActivity extends AppCompatActivity
             public void onDismiss(final DialogInterface dialog) {
                 //Do some work
                 textViewTitle.setText(multiSelectionSpinner.getSelectedItemsAsString());
+                List<String> snackList = multiSelectionSpinner.getSelectedStrings();
+                if (snackLayoutLinear.getChildCount() > 0)
+                    snackLayoutLinear.removeAllViews();
+                if (textViewTitle.getText().length() <= 1) {
+                    textViewTitle.setText("Choose Snacks..");
+                    textViewTitle.setVisibility(View.VISIBLE);
+                    snackHorizontalScrollView.setVisibility(View.INVISIBLE);
+                } else {
+                    snackHorizontalScrollView.setVisibility(View.VISIBLE);
+                    textViewTitle.setVisibility(View.INVISIBLE);
+                    for (int i = 0; i < snackList.size(); i++) {
+                        TextView rowTextView = new TextView(SearchPageActivity.this);
+                        rowTextView.setText(snackList.get(i));
+                        //rowTextView.setAllCaps(true);
+                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                        params.setMargins(0, 0, 10, 0);
+                        rowTextView.setLayoutParams(params);
+                        rowTextView.setPadding(10, 10, 10, 10);
+                        rowTextView.setBackgroundResource(R.drawable.tags);
+                        snackLayoutLinear.addView(rowTextView);
+                    }
+                    snackHorizontalScrollView.fullScroll(HorizontalScrollView.FOCUS_LEFT);
+                }
                 searchLayoutView.setVisibility(View.INVISIBLE);
+
                 //getActionBar().show();
 
             }
@@ -121,7 +151,9 @@ public class SearchPageActivity extends AppCompatActivity
                                     myActionMenuItem.collapseActionView();
                                     setTitle(places.get(0).getName());
                                     searchView.clearFocus();
+                                    textViewTitle.setText("Choose Snacks..");
                                     textViewTitle.setVisibility(View.VISIBLE);
+                                    snackHorizontalScrollView.setVisibility(View.INVISIBLE);
                                     snackLayout.setVisibility(View.VISIBLE);
                                     mRecyclerView.setVisibility(View.INVISIBLE);
                                 } else {
@@ -144,12 +176,20 @@ public class SearchPageActivity extends AppCompatActivity
                 startActivity(intent);
             }
         });
-        textViewTitle.setOnClickListener(new View.OnClickListener() {
+        snackLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 multiSelectionSpinner.performClick();
+                textViewTitle.setVisibility(View.INVISIBLE);
             }
         });
+
+//        textViewTitle.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                multiSelectionSpinner.performClick();
+//            }
+//        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(

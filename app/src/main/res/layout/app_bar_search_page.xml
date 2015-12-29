@@ -23,19 +23,29 @@
         <RelativeLayout
             android:id="@+id/snackLayout"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="50dp"
             android:background="@color/primary_dark"
+            android:clickable="true"
             android:visibility="invisible">
 
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="60dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="15dp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/forkspoon" />
+            <!--android:drawableLeft="@drawable/search"-->
             <TextView
                 android:id="@+id/textViewTitle"
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
+                android:layout_height="80dp"
                 android:layout_marginBottom="10dp"
-                android:layout_marginLeft="30dp"
+                android:layout_marginLeft="60dp"
                 android:layout_marginRight="20dp"
-                android:layout_marginTop="10dp"
-                android:drawableLeft="@drawable/search"
+                android:layout_marginTop="18dp"
                 android:drawablePadding="10dp"
                 android:drawableTint="@color/white"
                 android:ellipsize="marquee"
@@ -48,6 +58,47 @@
                 android:text="Choose snacks.."
                 android:textColor="@color/white"
                 android:visibility="invisible" />
+
+            <HorizontalScrollView
+                android:id="@+id/snackHorizontalScrollView"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="60dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="10dp"
+                android:animateLayoutChanges="true"
+                android:ellipsize="marquee"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:gravity="bottom"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:scrollHorizontally="true"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:id="@+id/snackLayoutLinear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="60dp"
+                    android:gravity="right"
+                    android:orientation="horizontal">
+
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="60dp"
+                android:layout_alignParentLeft="false"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="right"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="15dp"
+                android:adjustViewBounds="true"
+                android:scaleType="fitStart"
+                android:src="@android:drawable/ic_menu_search" />
         </RelativeLayout>
     </android.support.design.widget.AppBarLayout>
 
@@ -77,7 +128,7 @@
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="95dp"
+            android:layout_marginTop="50dp"
             android:scrollbars="vertical" />
 
     </RelativeLayout>
