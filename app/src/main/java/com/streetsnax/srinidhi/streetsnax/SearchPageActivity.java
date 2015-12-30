@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -30,6 +31,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.AutocompleteFilter;
+import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
@@ -42,17 +45,21 @@ import com.streetsnax.srinidhi.streetsnax.utilities.AppConstants;
 import com.streetsnax.srinidhi.streetsnax.utilities.MultiSelectionSpinner;
 import com.streetsnax.srinidhi.streetsnax.utilities.PrefUtil;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import dfapi.ApiException;
 import dfapi.ApiInvoker;
 import dfapi.BaseAsyncRequest;
+
 public class SearchPageActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
+
+    //region Variables
     private static final LatLngBounds BOUNDS_INDIA = new LatLngBounds(
-            new LatLng(-0, 0), new LatLng(0, 0));
+            new LatLng(12.778322, 77.368469), new LatLng(13.205187, 77.812042));//(LatLng southwest, LatLng northeast)
     protected GoogleApiClient mGoogleApiClient;
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
@@ -64,21 +71,29 @@ public class SearchPageActivity extends AppCompatActivity
     private RelativeLayout snackLayout;
     private HorizontalScrollView snackHorizontalScrollView;
     private LinearLayout snackLayoutLinear;
+    //endregion
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         buildGoogleApiClient();
         setContentView(R.layout.activity_search_page);
+
         searchLayoutView = (RelativeLayout) findViewById(R.id.searchLayoutView);
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
         snackLayout = (RelativeLayout) findViewById(R.id.snackLayout);
-        searchLayoutView.setVisibility(View.INVISIBLE);
         snackHorizontalScrollView = (HorizontalScrollView) findViewById(R.id.snackHorizontalScrollView);
-        snackHorizontalScrollView.setVisibility(View.INVISIBLE);
         snackLayoutLinear = (LinearLayout) findViewById(R.id.snackLayoutLinear);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 
+        searchLayoutView.setVisibility(View.INVISIBLE);
+        snackHorizontalScrollView.setVisibility(View.INVISIBLE);
+
+        List<Integer> filterTypes = new ArrayList<>();
+        filterTypes.add(Place.TYPE_LOCALITY);
+        AutocompleteFilter filter = null;//AutocompleteFilter.create(filterTypes);
         mAutoCompleteAdapter = new PlacesAutoCompleteAdapter(this, R.layout.searchview_adapter,
-                mGoogleApiClient, BOUNDS_INDIA, null);
+                mGoogleApiClient, BOUNDS_INDIA, filter, "Bangalore");
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         mLinearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
@@ -125,50 +140,61 @@ public class SearchPageActivity extends AppCompatActivity
 
             }
         });
+
         mRecyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(this, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
                         hidekeyboard();
                         final PlacesAutoCompleteAdapter.PlaceAutocomplete item = mAutoCompleteAdapter.getItem(position);
-                        final String placeId = String.valueOf(item.placeId);
-                        Log.i("TAG", "Autocomplete item selected: " + item.description);
+                        if (item != null) {
+                            final String placeId = String.valueOf(item.placeId);
+                            Log.i("TAG", "Autocomplete item selected: " + item.description);
                         /*
                              Issue a request to the Places Geo Data API to retrieve a Place object with additional details about the place.
                          */
-
-                        PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
-                                .getPlaceById(mGoogleApiClient, placeId);
-                        placeResult.setResultCallback(new ResultCallback<PlaceBuffer>() {
-                            @Override
-                            public void onResult(PlaceBuffer places) {
-                                if (places.getCount() == 1) {
-                                    //Do the things here on Click.....
-                                    //Toast.makeText(getApplicationContext(), String.valueOf(places.get(0).getLatLng()), Toast.LENGTH_SHORT).show();
-                                    //mAutocompleteView.setText(String.valueOf(places.get(0).getAddress()));
-                                    SearchView searchView = (SearchView) myActionMenuItem.getActionView();
-                                    searchView.setQuery(places.get(0).getAddress(), false);
-                                    myActionMenuItem.collapseActionView();
-                                    setTitle(places.get(0).getName());
-                                    searchView.clearFocus();
-                                    textViewTitle.setText("Choose Snacks..");
-                                    textViewTitle.setVisibility(View.VISIBLE);
-                                    snackHorizontalScrollView.setVisibility(View.INVISIBLE);
-                                    snackLayout.setVisibility(View.VISIBLE);
-                                    mRecyclerView.setVisibility(View.INVISIBLE);
-                                } else {
-                                    mRecyclerView.setVisibility(View.VISIBLE);
-                                    Toast.makeText(getApplicationContext(), AppConstants.SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show();
+                            PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
+                                    .getPlaceById(mGoogleApiClient, placeId);
+                            placeResult.setResultCallback(new ResultCallback<PlaceBuffer>() {
+                                @Override
+                                public void onResult(PlaceBuffer places) {
+                                    if (places.getCount() == 1) {
+                                        //Do the things here on Click.....
+                                        //Toast.makeText(getApplicationContext(), String.valueOf(places.get(0).getLatLng()), Toast.LENGTH_SHORT).show();
+                                        //mAutocompleteView.setText(String.valueOf(places.get(0).getAddress()));
+                                        myActionMenuItem.collapseActionView();
+                                        SearchView searchView = (SearchView) myActionMenuItem.getActionView();
+                                        searchView.setQuery(places.get(0).getAddress(), false);
+                                        setTitle(places.get(0).getAddress());
+                                        searchView.clearFocus();
+                                        textViewTitle.setText("Choose Snacks..");
+                                        textViewTitle.setVisibility(View.VISIBLE);
+                                        snackHorizontalScrollView.setVisibility(View.INVISIBLE);
+                                        snackLayout.setVisibility(View.VISIBLE);
+                                        mRecyclerView.setVisibility(View.INVISIBLE);
+                                    } else {
+                                        mRecyclerView.setVisibility(View.VISIBLE);
+                                        Toast.makeText(getApplicationContext(), AppConstants.SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show();
+                                    }
                                 }
-                            }
-                        });
-                        Log.i("TAG", "Clicked: " + item.description);
-                        Log.i("TAG", "Called getPlaceById to get Place details for " + item.placeId);
+                            });
+                            Log.i("TAG", "Clicked: " + item.description);
+                            Log.i("TAG", "Called getPlaceById to get Place details for " + item.placeId);
+                        } else {
+                            SearchView searchView = (SearchView) myActionMenuItem.getActionView();
+                            searchView.setQuery("", false);
+                            Snackbar.make(view, "Invalid Place, Please try again", Snackbar.LENGTH_LONG)
+                                    .setAction("Action", null).show();
+                            setTitle("Search snack Places...");
+                            searchView.clearFocus();
+                            mRecyclerView.setVisibility(View.INVISIBLE);
+                        }
+
                     }
                 })
         );
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -184,13 +210,6 @@ public class SearchPageActivity extends AppCompatActivity
             }
         });
 
-//        textViewTitle.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                multiSelectionSpinner.performClick();
-//            }
-//        });
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -199,14 +218,6 @@ public class SearchPageActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-    }
-
-    protected synchronized void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .addApi(Places.GEO_DATA_API)
-                .build();
     }
 
     @Override
@@ -234,7 +245,7 @@ public class SearchPageActivity extends AppCompatActivity
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                callSearch(query);
+                //callSearch(query);
                 return true;
             }
 
@@ -346,6 +357,14 @@ public class SearchPageActivity extends AppCompatActivity
         }
     }
 
+    //region CustomMethods
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .addApi(Places.GEO_DATA_API)
+                .build();
+    }
 
     public void hidekeyboard() {
 
@@ -371,7 +390,9 @@ public class SearchPageActivity extends AppCompatActivity
         //String[] array = {"one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "six", "seven", "eight", "nine", "ten"};
         //multiSelectionSpinner.setSelection(new int[]{2, 6});
     }
+    //endregion
 
+    //region DreamFactoryTask To Retrieve Snacks
     public class GetSnackTypeTask extends BaseAsyncRequest {
 
         private Snacks snackRecords;
@@ -417,4 +438,5 @@ public class SearchPageActivity extends AppCompatActivity
             }
         }
     }
+    //endregion
 }

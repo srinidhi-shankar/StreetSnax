@@ -34,7 +34,7 @@
                 android:layout_height="60dp"
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="20dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="12dp"
                 android:adjustViewBounds="true"
                 android:src="@drawable/forkspoon" />
             <!--android:drawableLeft="@drawable/search"-->
@@ -45,7 +45,7 @@
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="60dp"
                 android:layout_marginRight="20dp"
-                android:layout_marginTop="18dp"
+                android:layout_marginTop="16dp"
                 android:drawablePadding="10dp"
                 android:drawableTint="@color/white"
                 android:ellipsize="marquee"
@@ -65,7 +65,7 @@
                 android:layout_height="80dp"
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="60dp"
-                android:layout_marginRight="20dp"
+                android:layout_marginRight="50dp"
                 android:layout_marginTop="10dp"
                 android:animateLayoutChanges="true"
                 android:ellipsize="marquee"
@@ -95,7 +95,7 @@
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="15dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="12dp"
                 android:adjustViewBounds="true"
                 android:scaleType="fitStart"
                 android:src="@android:drawable/ic_menu_search" />

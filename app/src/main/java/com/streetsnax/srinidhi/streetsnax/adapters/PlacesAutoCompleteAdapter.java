@@ -43,17 +43,18 @@ public class PlacesAutoCompleteAdapter
     private GoogleApiClient mGoogleApiClient;
     private LatLngBounds mBounds;
     private AutocompleteFilter mPlaceFilter;
-
+    private String mfilterPlace;
     private Context mContext;
     private int layout;
 
     public PlacesAutoCompleteAdapter(Context context, int resource, GoogleApiClient googleApiClient,
-                                     LatLngBounds bounds, AutocompleteFilter filter) {
+                                     LatLngBounds bounds, AutocompleteFilter filter, String filterPlace) {
         mContext = context;
         layout = resource;
         mGoogleApiClient = googleApiClient;
         mBounds = bounds;
         mPlaceFilter = filter;
+        mfilterPlace = filterPlace;
     }
 
     /**
@@ -75,6 +76,10 @@ public class PlacesAutoCompleteAdapter
                 // Skip the autocomplete query if no constraints are given.
                 if (constraint != null) {
                     // Query the autocomplete API for the (constraint) search string.
+                    if (!constraint.toString().toUpperCase().contains(mfilterPlace.toUpperCase()) || !constraint.toString().toUpperCase().contains("BENGALURU")) {
+                        String constraintString = constraint.toString() + "," + mfilterPlace;
+                        constraint = constraintString;
+                    }
                     mResultList = getAutocomplete(constraint);
                     if (mResultList != null) {
                         // The API successfully returned results.
@@ -92,7 +97,8 @@ public class PlacesAutoCompleteAdapter
                     notifyDataSetChanged();
                 } else {
                     // The API did not return any results, invalidate the data set.
-                    //notifyDataSetInvalidated();
+                    // notifyItemRangeRemoved(0, getItemCount());
+                    notifyDataSetChanged();
                 }
             }
         };
@@ -177,7 +183,10 @@ public class PlacesAutoCompleteAdapter
     }
 
     public PlaceAutocomplete getItem(int position) {
-        return mResultList.get(position);
+        if (mResultList != null && mResultList.size() > 0)
+            return mResultList.get(position);
+        else
+            return null;
     }
 
     public class PredictionHolder extends RecyclerView.ViewHolder {
