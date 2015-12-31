@@ -76,7 +76,7 @@ public class LoginActivity extends AppCompatActivity {
         // Add all the images to the ViewFlipper
         for (int i = 0; i < 5; i++) {
             ImageView imageView = new ImageView(this);
-            new DownloadImageTask(imageView).execute("http://lorempixel.com/900/600/food/");
+            new DownloadImageTask(imageView).execute("http://lorempixel.com/480/320/food/");
             //imageView.setImageResource(resources[i]);
             mViewFlipper.addView(imageView);
         }

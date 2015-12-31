@@ -21,9 +21,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,11 +43,13 @@ import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.streetsnax.srinidhi.streetsnax.adapters.ItemListBaseAdapter;
 import com.streetsnax.srinidhi.streetsnax.adapters.PlacesAutoCompleteAdapter;
 import com.streetsnax.srinidhi.streetsnax.listeners.RecyclerItemClickListener;
 import com.streetsnax.srinidhi.streetsnax.models.Snack;
 import com.streetsnax.srinidhi.streetsnax.models.Snacks;
 import com.streetsnax.srinidhi.streetsnax.utilities.AppConstants;
+import com.streetsnax.srinidhi.streetsnax.utilities.ItemDetails;
 import com.streetsnax.srinidhi.streetsnax.utilities.MultiSelectionSpinner;
 import com.streetsnax.srinidhi.streetsnax.utilities.PrefUtil;
 
@@ -72,6 +79,12 @@ public class SearchPageActivity extends AppCompatActivity
     private RelativeLayout snackLayout;
     private HorizontalScrollView snackHorizontalScrollView;
     private LinearLayout snackLayoutLinear;
+    private ScrollView ScrollViewSearchPageContent;
+    private ListView searchListView;
+    private ImageView searchImageContent;
+    private TextView searchTextContent;
+    private ProgressBar searchPageProgressBar;
+    private ArrayList<ItemDetails> item_details;
     //endregion
 
     @Override
@@ -86,7 +99,13 @@ public class SearchPageActivity extends AppCompatActivity
         snackHorizontalScrollView = (HorizontalScrollView) findViewById(R.id.snackHorizontalScrollView);
         snackLayoutLinear = (LinearLayout) findViewById(R.id.snackLayoutLinear);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        ScrollViewSearchPageContent = (ScrollView) findViewById(R.id.ScrollViewSearchPageContent);
+        searchListView = (ListView) findViewById(R.id.searchListView);
+        searchImageContent = (ImageView) findViewById(R.id.searchImageContent);
+        searchTextContent = (TextView) findViewById(R.id.searchTextContent);
+        searchPageProgressBar = (ProgressBar) findViewById(R.id.searchPageProgressBar);
 
+        //ScrollViewSearchPageContent.setVisibility(View.INVISIBLE);
         searchLayoutView.setVisibility(View.INVISIBLE);
         snackHorizontalScrollView.setVisibility(View.INVISIBLE);
 
@@ -113,6 +132,8 @@ public class SearchPageActivity extends AppCompatActivity
                 //Do some work
                 textViewTitle.setText(multiSelectionSpinner.getSelectedItemsAsString());
                 List<String> snackList = multiSelectionSpinner.getSelectedStrings();
+                searchPageProgressBar.setVisibility(View.VISIBLE);
+                //searchListView.removeAllViews();
                 if (snackLayoutLinear.getChildCount() > 0)
                     snackLayoutLinear.removeAllViews();
                 if (textViewTitle.getText().length() <= 1) {
@@ -133,6 +154,9 @@ public class SearchPageActivity extends AppCompatActivity
                         rowTextView.setBackgroundResource(R.drawable.tags);
                         snackLayoutLinear.addView(rowTextView);
                     }
+                    item_details = GetSearchResults(getTitle().toString(), textViewTitle.getText().toString());
+                    searchListView.setAdapter(new ItemListBaseAdapter(SearchPageActivity.this, item_details));
+                    searchPageProgressBar.setVisibility(View.INVISIBLE);
                     snackHorizontalScrollView.fullScroll(HorizontalScrollView.FOCUS_LEFT);
                 }
                 searchLayoutView.setVisibility(View.INVISIBLE);
@@ -208,6 +232,17 @@ public class SearchPageActivity extends AppCompatActivity
             public void onClick(View view) {
                 multiSelectionSpinner.performClick();
                 textViewTitle.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        searchListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> a, View v, int position, long id) {
+                Object o = searchListView.getItemAtPosition(position);
+                ItemDetails obj_itemDetails = (ItemDetails) o;
+                Intent intent = new Intent(SearchPageActivity.this, SearchScrollingActivity.class);
+                startActivity(intent);
+                //Toast.makeText(SearchPageActivity.this, "You have chosen : "+ obj_itemDetails.getplaceAddress(), Toast.LENGTH_LONG).show();
             }
         });
 
@@ -411,6 +446,19 @@ public class SearchPageActivity extends AppCompatActivity
 
         //String[] array = {"one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "six", "seven", "eight", "nine", "ten"};
         //multiSelectionSpinner.setSelection(new int[]{2, 6});
+    }
+
+    private ArrayList<ItemDetails> GetSearchResults(String locationAddress, String snackType) {
+        ArrayList<ItemDetails> results = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            ItemDetails itemDetails = new ItemDetails();
+            itemDetails.setItemImageSrc("http://lorempixel.com/900/600/food/");
+            itemDetails.setplaceAddress(locationAddress);
+            itemDetails.setsnackType(snackType);
+            results.add(itemDetails);
+        }
+
+        return results;
     }
     //endregion
 

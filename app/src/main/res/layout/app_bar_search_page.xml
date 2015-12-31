@@ -7,142 +7,148 @@
     android:fitsSystemWindows="true"
     tools:context="com.streetsnax.srinidhi.streetsnax.SearchPageActivity">
 
-    <android.support.design.widget.AppBarLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/primary_darker"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_height="match_parent">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/primary_darker"
-            app:popupTheme="@style/AppTheme.PopupOverlay"></android.support.v7.widget.Toolbar>
+        <include layout="@layout/content_search_page" />
 
-        <RelativeLayout
-            android:id="@+id/snackLayout"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@color/primary_dark"
-            android:clickable="true"
-            android:visibility="invisible">
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/fab_margin"
+            android:background="@drawable/btnselector"
+            android:src="@drawable/plus"
+            app:backgroundTint="@color/primary" />
 
 
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="60dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="12dp"
-                android:adjustViewBounds="true"
-                android:src="@drawable/forkspoon" />
-            <!--android:drawableLeft="@drawable/search"-->
-            <TextView
-                android:id="@+id/textViewTitle"
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="60dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="16dp"
-                android:drawablePadding="10dp"
-                android:drawableTint="@color/white"
-                android:ellipsize="marquee"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:gravity="left"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:scrollHorizontally="true"
-                android:singleLine="true"
-                android:text="Choose snacks.."
-                android:textColor="@color/white"
-                android:visibility="invisible" />
-
-            <HorizontalScrollView
-                android:id="@+id/snackHorizontalScrollView"
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="60dp"
-                android:layout_marginRight="50dp"
-                android:layout_marginTop="10dp"
-                android:animateLayoutChanges="true"
-                android:ellipsize="marquee"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:gravity="bottom"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:scrollHorizontally="true"
-                android:scrollbars="none">
-
-                <LinearLayout
-                    android:id="@+id/snackLayoutLinear"
-                    android:layout_width="wrap_content"
-                    android:layout_height="60dp"
-                    android:gravity="right"
-                    android:orientation="horizontal">
-
-                </LinearLayout>
-            </HorizontalScrollView>
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="60dp"
-                android:layout_alignParentLeft="false"
-                android:layout_alignParentRight="true"
-                android:layout_gravity="right"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginTop="12dp"
-                android:adjustViewBounds="true"
-                android:scaleType="fitStart"
-                android:src="@android:drawable/ic_menu_search" />
-        </RelativeLayout>
-    </android.support.design.widget.AppBarLayout>
-
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/searchLayoutView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <com.streetsnax.srinidhi.streetsnax.utilities.MultiSelectionSpinner
-            android:id="@+id/mySpinner"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/edit_text_style"
-            android:drawableLeft="@drawable/search"
-            android:drawablePadding="9dp"
-            android:hint="Search a snack"
-            android:paddingLeft="8dp"
-            android:paddingRight="9dp"
-            android:textColor="@android:color/primary_text_light"
-            android:textColorHint="@color/grey"
-            android:visibility="invisible" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView"
+        <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:scrollbars="vertical" />
+            android:background="@color/primary_darker"
+            android:theme="@style/AppTheme.AppBarOverlay">
 
-    </RelativeLayout>
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/primary_darker"
+                app:popupTheme="@style/AppTheme.PopupOverlay"></android.support.v7.widget.Toolbar>
 
-    <include layout="@layout/content_search_page" />
+            <RelativeLayout
+                android:id="@+id/snackLayout"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/primary_dark"
+                android:clickable="true"
+                android:visibility="invisible">
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:background="@drawable/btnselector"
-        android:src="@drawable/plus"
-        app:backgroundTint="@color/primary" />
 
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="60dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="12dp"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/forkspoon" />
+                <!--android:drawableLeft="@drawable/search"-->
+                <TextView
+                    android:id="@+id/textViewTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="60dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="16dp"
+                    android:drawablePadding="10dp"
+                    android:drawableTint="@color/white"
+                    android:ellipsize="marquee"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:gravity="left"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:text="Choose snacks.."
+                    android:textColor="@color/white"
+                    android:visibility="invisible" />
+
+                <HorizontalScrollView
+                    android:id="@+id/snackHorizontalScrollView"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="60dp"
+                    android:layout_marginRight="50dp"
+                    android:layout_marginTop="10dp"
+                    android:animateLayoutChanges="true"
+                    android:ellipsize="marquee"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:gravity="bottom"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:scrollHorizontally="true"
+                    android:scrollbars="none">
+
+                    <LinearLayout
+                        android:id="@+id/snackLayoutLinear"
+                        android:layout_width="wrap_content"
+                        android:layout_height="60dp"
+                        android:gravity="right"
+                        android:orientation="horizontal">
+
+                    </LinearLayout>
+                </HorizontalScrollView>
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="60dp"
+                    android:layout_alignParentLeft="false"
+                    android:layout_alignParentRight="true"
+                    android:layout_gravity="right"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="12dp"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitStart"
+                    android:src="@android:drawable/ic_menu_search" />
+            </RelativeLayout>
+        </android.support.design.widget.AppBarLayout>
+
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/searchLayoutView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.streetsnax.srinidhi.streetsnax.utilities.MultiSelectionSpinner
+                android:id="@+id/mySpinner"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/edit_text_style"
+                android:drawableLeft="@drawable/search"
+                android:drawablePadding="9dp"
+                android:hint="Search a snack"
+                android:paddingLeft="8dp"
+                android:paddingRight="9dp"
+                android:textColor="@android:color/primary_text_light"
+                android:textColorHint="@color/grey"
+                android:visibility="invisible" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:scrollbars="vertical" />
+
+        </RelativeLayout>
+
+    </FrameLayout>
 </android.support.design.widget.CoordinatorLayout>
