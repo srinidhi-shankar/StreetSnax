@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -269,6 +270,24 @@ public class SearchPageActivity extends AppCompatActivity
             }
 
         });
+        MenuItemCompat.setOnActionExpandListener(myActionMenuItem, new MenuItemCompat.OnActionExpandListener() {
+
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                if (mRecyclerView != null && mRecyclerView.getVisibility() == View.VISIBLE)
+                    mRecyclerView.setVisibility(View.INVISIBLE);
+                Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+                if (!toolbar.getTitle().toString().toUpperCase().contains("SEARCH")) {
+                    snackLayout.setVisibility(View.VISIBLE);
+                }
+                return true;
+            }
+        });
 
         return true;
     }
@@ -283,6 +302,9 @@ public class SearchPageActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        } else if (id == android.R.id.home) {
+            if (mRecyclerView != null && mRecyclerView.getVisibility() == View.VISIBLE)
+                mRecyclerView.setVisibility(View.INVISIBLE);
         }
 
         return super.onOptionsItemSelected(item);
