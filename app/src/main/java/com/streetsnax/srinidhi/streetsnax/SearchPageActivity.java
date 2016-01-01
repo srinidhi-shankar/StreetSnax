@@ -83,8 +83,10 @@ public class SearchPageActivity extends AppCompatActivity
     private ListView searchListView;
     private ImageView searchImageContent;
     private TextView searchTextContent;
+    private TextView snackPlaceName;
     private ProgressBar searchPageProgressBar;
     private ArrayList<ItemDetails> item_details;
+    private TextView textViewHiddenPlaceID;
     //endregion
 
     @Override
@@ -104,7 +106,8 @@ public class SearchPageActivity extends AppCompatActivity
         searchImageContent = (ImageView) findViewById(R.id.searchImageContent);
         searchTextContent = (TextView) findViewById(R.id.searchTextContent);
         searchPageProgressBar = (ProgressBar) findViewById(R.id.searchPageProgressBar);
-
+        textViewHiddenPlaceID = (TextView) findViewById(R.id.textViewHiddenPlaceID);
+        snackPlaceName = (TextView) findViewById(R.id.snackPlaceName);
         //ScrollViewSearchPageContent.setVisibility(View.INVISIBLE);
         searchLayoutView.setVisibility(View.INVISIBLE);
         snackHorizontalScrollView.setVisibility(View.INVISIBLE);
@@ -187,6 +190,7 @@ public class SearchPageActivity extends AppCompatActivity
                                         //Do the things here on Click.....
                                         //Toast.makeText(getApplicationContext(), String.valueOf(places.get(0).getLatLng()), Toast.LENGTH_SHORT).show();
                                         //mAutocompleteView.setText(String.valueOf(places.get(0).getAddress()));
+                                        textViewHiddenPlaceID.setText(placeId);
                                         myActionMenuItem.collapseActionView();
                                         SearchView searchView = (SearchView) myActionMenuItem.getActionView();
                                         searchView.setQuery(places.get(0).getAddress(), false);
@@ -241,8 +245,8 @@ public class SearchPageActivity extends AppCompatActivity
                 Object o = searchListView.getItemAtPosition(position);
                 ItemDetails obj_itemDetails = (ItemDetails) o;
                 Intent intent = new Intent(SearchPageActivity.this, SearchScrollingActivity.class);
+                intent.putExtra("SnackPlaceDetails", obj_itemDetails);
                 startActivity(intent);
-                //Toast.makeText(SearchPageActivity.this, "You have chosen : "+ obj_itemDetails.getplaceAddress(), Toast.LENGTH_LONG).show();
             }
         });
 
@@ -455,6 +459,8 @@ public class SearchPageActivity extends AppCompatActivity
             itemDetails.setItemImageSrc("http://lorempixel.com/900/600/food/");
             itemDetails.setplaceAddress(locationAddress);
             itemDetails.setsnackType(snackType);
+            itemDetails.setplaceID(textViewHiddenPlaceID.getText().toString());
+            itemDetails.setsnackPlaceName("SnackPlaceName #" + i);
             results.add(itemDetails);
         }
 

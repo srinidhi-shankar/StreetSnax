@@ -141,6 +141,12 @@
                 android:textColorHint="@color/grey"
                 android:visibility="invisible" />
 
+            <TextView
+                android:id="@+id/textViewHiddenPlaceID"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:visibility="invisible" />
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"

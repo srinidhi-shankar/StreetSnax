@@ -52,6 +52,7 @@ public class ItemListBaseAdapter extends BaseAdapter {
             holder.searchImageContent = (ImageView) convertView.findViewById(R.id.searchImageContent);
             holder.searchTextContent = (TextView) convertView.findViewById(R.id.searchTextContent);
             holder.searchSnackContent = (TextView) convertView.findViewById(R.id.searchSnackContent);
+            holder.snackPlaceName = (TextView) convertView.findViewById(R.id.snackPlaceName);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -60,11 +61,13 @@ public class ItemListBaseAdapter extends BaseAdapter {
         holder.searchTextContent.setText(itemDetailsrrayList.get(position).getplaceAddress());
         new DownloadImageTask(holder.searchImageContent).execute(itemDetailsrrayList.get(position).getItemImageSrc());
         holder.searchSnackContent.setText(itemDetailsrrayList.get(position).getsnackType());
+        holder.snackPlaceName.setText(itemDetailsrrayList.get(position).getsnackPlaceName());
 
         return convertView;
     }
 
     static class ViewHolder {
+        TextView snackPlaceName;
         TextView searchTextContent;
         ImageView searchImageContent;
         TextView searchSnackContent;
