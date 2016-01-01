@@ -22,7 +22,7 @@ public class ItemDetails implements Parcelable {
     private String snackType;
     private String itemImageSrc;
     private String placeID;
-    //  private int latitude;
+    private String latlong;
     private String snackPlaceName;
 
     public ItemDetails() {
@@ -31,13 +31,14 @@ public class ItemDetails implements Parcelable {
 
     // Parcelling part
     public ItemDetails(Parcel in) {
-        String[] data = new String[5];
+        String[] data = new String[6];
         in.readStringArray(data);
         this.placeAddress = data[0];
         this.snackType = data[1];
         this.itemImageSrc = data[2];
         this.placeID = data[3];
         this.snackPlaceName = data[4];
+        this.latlong = data[5];
     }
 
     public String getplaceAddress() {
@@ -80,6 +81,14 @@ public class ItemDetails implements Parcelable {
         this.snackPlaceName = snackPlaceName;
     }
 
+    public String getlatlong() {
+        return latlong;
+    }
+
+    public void setlatlong(String latlong) {
+        this.latlong = latlong;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -91,7 +100,8 @@ public class ItemDetails implements Parcelable {
                 this.snackType,
                 this.itemImageSrc,
                 this.placeID,
-                this.snackPlaceName});
+                this.snackPlaceName,
+                this.latlong});
     }
 }
 

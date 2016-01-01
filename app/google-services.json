@@ -1,0 +1,51 @@
+{
+  "project_info": {
+    "project_id": "mineral-droplet-117106",
+    "project_number": "631450505332",
+    "name": "StreetSnax"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:631450505332:android:00e2dd5b31b771e9",
+        "client_id": "android:com.streetsnax.srinidhi.streetsnax",
+        "client_type": 1,
+        "android_client_info": {
+          "package_name": "com.streetsnax.srinidhi.streetsnax"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "631450505332-vdqqoql0ilbcvg2fnbd60irdlgs3utgk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.streetsnax.srinidhi.streetsnax",
+            "certificate_hash": "E9EFD3303C728014A66E644AE2B841AF8CEF5D2F"
+          }
+        }
+      ],
+      "api_key": [],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "cloud_messaging_service": {
+          "status": 1,
+          "apns_config": []
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "google_signin_service": {
+          "status": 2
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "client_info": [],
+  "ARTIFACT_VERSION": "1"
+}

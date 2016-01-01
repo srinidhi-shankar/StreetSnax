@@ -87,6 +87,7 @@ public class SearchPageActivity extends AppCompatActivity
     private ProgressBar searchPageProgressBar;
     private ArrayList<ItemDetails> item_details;
     private TextView textViewHiddenPlaceID;
+    private String latlong;
     //endregion
 
     @Override
@@ -190,6 +191,7 @@ public class SearchPageActivity extends AppCompatActivity
                                         //Do the things here on Click.....
                                         //Toast.makeText(getApplicationContext(), String.valueOf(places.get(0).getLatLng()), Toast.LENGTH_SHORT).show();
                                         //mAutocompleteView.setText(String.valueOf(places.get(0).getAddress()));
+                                        latlong = String.valueOf(places.get(0).getLatLng());
                                         textViewHiddenPlaceID.setText(placeId);
                                         myActionMenuItem.collapseActionView();
                                         SearchView searchView = (SearchView) myActionMenuItem.getActionView();
@@ -460,6 +462,7 @@ public class SearchPageActivity extends AppCompatActivity
             itemDetails.setplaceAddress(locationAddress);
             itemDetails.setsnackType(snackType);
             itemDetails.setplaceID(textViewHiddenPlaceID.getText().toString());
+            itemDetails.setlatlong(latlong);
             itemDetails.setsnackPlaceName("SnackPlaceName #" + i);
             results.add(itemDetails);
         }

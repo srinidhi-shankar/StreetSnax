@@ -8,13 +8,23 @@
     tools:context="com.streetsnax.srinidhi.streetsnax.SearchScrollingActivity"
     tools:showIn="@layout/activity_search_scrolling">
 
-    <TextView
-        android:id="@+id/textViewSearchInfoContent"
+    <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:maxLines="10"
-        android:text="@string/large_text" />
+        android:layout_height="wrap_content">
 
-    <!--<include layout="@layout/activity_maps" /> -->
+        <TextView
+            android:id="@+id/textViewSearchInfoContent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/text_margin"
+            android:maxLines="10"
+            android:text="@string/large_text" />
+
+        <include
+            layout="@layout/activity_google_maps"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_below="@+id/textViewSearchInfoContent" />
+    </RelativeLayout>
+
 </android.support.v4.widget.NestedScrollView>

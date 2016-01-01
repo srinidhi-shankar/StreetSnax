@@ -14,15 +14,25 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.streetsnax.srinidhi.streetsnax.utilities.ItemDetails;
 
 import java.io.InputStream;
 
-public class SearchScrollingActivity extends AppCompatActivity {
+public class SearchScrollingActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private TextView textViewSearchInfoContent;
     private ImageView imageinfoview;
     private CollapsingToolbarLayout infotoolbar_layout;
+    private LatLng location;
+    private String MapTitle;
+    private String MapDescription;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +51,20 @@ public class SearchScrollingActivity extends AppCompatActivity {
                 itemDetails.getplaceAddress());
         new DownloadImageTask(imageinfoview).execute(itemDetails.getItemImageSrc());
         infotoolbar_layout.setTitle(itemDetails.getsnackPlaceName());
+        MapTitle = itemDetails.getsnackPlaceName();
+        MapDescription = itemDetails.getsnackPlaceName();
+        String[] latLng = itemDetails.getlatlong().replace("lat/lng:", "").replace("(", "").replace(")", "").trim().split(",");
+        double latitude = Double.parseDouble(latLng[0]);
+        double longitude = Double.parseDouble(latLng[1]);
+        location = new LatLng(latitude, longitude);
 
+        try {
+            MapFragment mapFragment = ((MapFragment) getFragmentManager().
+                    findFragmentById(R.id.map));
+            mapFragment.getMapAsync(SearchScrollingActivity.this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fabSearchInfo);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,6 +75,38 @@ public class SearchScrollingActivity extends AppCompatActivity {
         });
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+    }
+
+    @Override
+    public void onMapReady(GoogleMap map) {
+
+        map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 14));
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                // TODO: Consider calling
+//                //    public void requestPermissions(@NonNull String[] permissions, int requestCode)
+//                // here to request the missing permissions, and then overriding
+//                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+//                //                                          int[] grantResults)
+//                // to handle the case where the user grants the permission. See the documentation
+//                // for Activity#requestPermissions for more details.
+//                return;
+//            }
+//        }
+//        map.setMyLocationEnabled(true);
+        map.setTrafficEnabled(true);
+        map.setBuildingsEnabled(true);
+
+        map.addMarker(new MarkerOptions()
+                .title(MapTitle)
+                .snippet(MapDescription)
+                .position(location)).showInfoWindow();
+        map.setPadding(10, 10, 10, 10);
+        map.getUiSettings().setMyLocationButtonEnabled(true);
+        map.getUiSettings().setZoomControlsEnabled(true);
+        map.getUiSettings().setMapToolbarEnabled(true);
     }
 
     class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
