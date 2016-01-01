@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
+import com.squareup.picasso.Picasso;
 import com.streetsnax.srinidhi.streetsnax.models.Users;
 import com.streetsnax.srinidhi.streetsnax.utilities.AppConstants;
 import com.streetsnax.srinidhi.streetsnax.utilities.PasswordHash;
@@ -76,7 +77,18 @@ public class LoginActivity extends AppCompatActivity {
         // Add all the images to the ViewFlipper
         for (int i = 0; i < 5; i++) {
             ImageView imageView = new ImageView(this);
-            new DownloadImageTask(imageView).execute("http://lorempixel.com/480/320/food/");
+            Picasso.with(this).load("http://lorempixel.com/200/120/food/").into(imageView, new com.squareup.picasso.Callback() {
+                @Override
+                public void onSuccess() {
+                    findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onError() {
+
+                }
+            });
+            //new DownloadImageTask(imageView).execute("http://lorempixel.com/480/320/food/");
             //imageView.setImageResource(resources[i]);
             mViewFlipper.addView(imageView);
         }

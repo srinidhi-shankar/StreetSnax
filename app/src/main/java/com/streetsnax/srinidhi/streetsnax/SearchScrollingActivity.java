@@ -20,6 +20,7 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.squareup.picasso.Picasso;
 import com.streetsnax.srinidhi.streetsnax.utilities.ItemDetails;
 
 import java.io.InputStream;
@@ -49,7 +50,8 @@ public class SearchScrollingActivity extends AppCompatActivity implements OnMapR
                 "\r\n\r\n" +
                 "Address :" +
                 itemDetails.getplaceAddress());
-        new DownloadImageTask(imageinfoview).execute(itemDetails.getItemImageSrc());
+        Picasso.with(this).load(itemDetails.getItemImageSrc()).into(imageinfoview);
+        //new DownloadImageTask(imageinfoview).execute(itemDetails.getItemImageSrc());
         infotoolbar_layout.setTitle(itemDetails.getsnackPlaceName());
         MapTitle = itemDetails.getsnackPlaceName();
         MapDescription = itemDetails.getsnackPlaceName();
