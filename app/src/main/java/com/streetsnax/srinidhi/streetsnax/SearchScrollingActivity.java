@@ -1,12 +1,13 @@
 package com.streetsnax.srinidhi.streetsnax;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -21,18 +22,25 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.picasso.Picasso;
+import com.streetsnax.srinidhi.streetsnax.utilities.CommonHelper;
 import com.streetsnax.srinidhi.streetsnax.utilities.ItemDetails;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class SearchScrollingActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    private TextView textViewSearchInfoContent;
+    private TextView txtViewSnackTypes;
+    private TextView txtViewAddress;
     private ImageView imageinfoview;
     private CollapsingToolbarLayout infotoolbar_layout;
     private LatLng location;
     private String MapTitle;
     private String MapDescription;
+    private double latitude;
+    private double longitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,22 +50,41 @@ public class SearchScrollingActivity extends AppCompatActivity implements OnMapR
         setContentView(R.layout.activity_search_scrolling);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        textViewSearchInfoContent = (TextView) findViewById(R.id.textViewSearchInfoContent);
+        txtViewSnackTypes = (TextView) findViewById(R.id.txtViewSnackTypes);
+        txtViewAddress = (TextView) findViewById(R.id.txtViewAddress);
         imageinfoview = (ImageView) findViewById(R.id.imageinfoview);
         infotoolbar_layout = (CollapsingToolbarLayout) findViewById(R.id.infotoolbar_layout);
-        textViewSearchInfoContent.setText("Snack Types Available : " +
-                itemDetails.getsnackType() +
-                "\r\n\r\n" +
-                "Address :" +
-                itemDetails.getplaceAddress());
+
+        List<String> snacklist = new ArrayList<>(Arrays.asList(itemDetails.getsnackType().split(",")));
+        txtViewSnackTypes.setMaxLines(snacklist.size());
+        txtViewSnackTypes.setText(itemDetails.getsnackType());
+//        for (int i = 0; i < snacklist.size(); i++) {
+//            txtViewSnackTypes.setText(txtViewSnackTypes.getText() + snacklist.get(i));
+//            if (i != 0)
+//                txtViewSnackTypes.setText(txtViewSnackTypes.getText() + "\n");
+//        }
+//        txtViewSnackTypes.setText("Snack Types Available : " +
+//                itemDetails.getsnackType() +
+//                "\r\n\r\n" +
+//                "Address :" +
+//                itemDetails.getplaceAddress());
+        List<String> addresslist = new ArrayList<>(Arrays.asList(itemDetails.getplaceAddress().split(",")));
+        txtViewAddress.setMaxLines(addresslist.size());
+        txtViewAddress.setText("");
+        for (int i = 0; i < addresslist.size(); i++) {
+            String addressLine = CommonHelper.toTitleCase(addresslist.get(i).trim());
+            if (!addressLine.equals(""))
+                txtViewAddress.setText(txtViewAddress.getText() + addressLine + "\n");
+        }
+
         Picasso.with(this).load(itemDetails.getItemImageSrc()).into(imageinfoview);
         //new DownloadImageTask(imageinfoview).execute(itemDetails.getItemImageSrc());
         infotoolbar_layout.setTitle(itemDetails.getsnackPlaceName());
         MapTitle = itemDetails.getsnackPlaceName();
         MapDescription = itemDetails.getsnackPlaceName();
         String[] latLng = itemDetails.getlatlong().replace("lat/lng:", "").replace("(", "").replace(")", "").trim().split(",");
-        double latitude = Double.parseDouble(latLng[0]);
-        double longitude = Double.parseDouble(latLng[1]);
+        latitude = Double.parseDouble(latLng[0]);
+        longitude = Double.parseDouble(latLng[1]);
         location = new LatLng(latitude, longitude);
 
         try {
@@ -71,8 +98,11 @@ public class SearchScrollingActivity extends AppCompatActivity implements OnMapR
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                //replace this with directions from current location
+                Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:" + latitude + "," + longitude + "\""));
+                i.setClassName("com.google.android.apps.maps",
+                        "com.google.android.maps.MapsActivity");
+                startActivity(i);
             }
         });
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);

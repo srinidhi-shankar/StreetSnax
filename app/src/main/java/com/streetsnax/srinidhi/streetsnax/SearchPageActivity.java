@@ -458,7 +458,8 @@ public class SearchPageActivity extends AppCompatActivity
         ArrayList<ItemDetails> results = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             ItemDetails itemDetails = new ItemDetails();
-            itemDetails.setItemImageSrc("http://lorempixel.com/200/120/food/");
+            String imageSrc = "http://lorempixel.com/400/200/food/SnackPlaceName" + i;
+            itemDetails.setItemImageSrc(imageSrc);
             itemDetails.setplaceAddress(locationAddress);
             itemDetails.setsnackType(snackType);
             itemDetails.setplaceID(textViewHiddenPlaceID.getText().toString());

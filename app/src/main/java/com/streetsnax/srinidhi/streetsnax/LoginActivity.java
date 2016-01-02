@@ -77,7 +77,8 @@ public class LoginActivity extends AppCompatActivity {
         // Add all the images to the ViewFlipper
         for (int i = 0; i < 5; i++) {
             ImageView imageView = new ImageView(this);
-            Picasso.with(this).load("http://lorempixel.com/200/120/food/").into(imageView, new com.squareup.picasso.Callback() {
+            String imageUrl = "http://lorempixel.com/420/300/food/streetsnax" + i;
+            Picasso.with(this).load(imageUrl).into(imageView, new com.squareup.picasso.Callback() {
                 @Override
                 public void onSuccess() {
                     findViewById(R.id.loadingPanel).setVisibility(View.GONE);

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:fitsSystemWindows="true"
     tools:context="com.streetsnax.srinidhi.streetsnax.SearchScrollingActivity">
 
@@ -11,6 +11,7 @@
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/app_bar_height"
+        android:background="@color/primary_darker"
         android:fitsSystemWindows="true"
         android:theme="@style/AppTheme.AppBarOverlay">
 
@@ -18,17 +19,17 @@
             android:id="@+id/infotoolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/primary_darker"
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
+            app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Subhead"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:title="Gowri Gajanan">
+            app:title="StreetSnax">
 
             <ImageView
                 android:id="@+id/imageinfoview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fitsSystemWindows="true"
-                android:scaleType="centerCrop"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
                 app:layout_collapseMode="parallax" />
 
             <android.support.v7.widget.Toolbar
@@ -48,8 +49,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
+        android:background="@drawable/btnselector"
         android:backgroundTint="@color/primary"
-        android:src="@android:drawable/ic_dialog_info"
+        android:src="@drawable/ic_directions_white_18dp"
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|end" />
 
