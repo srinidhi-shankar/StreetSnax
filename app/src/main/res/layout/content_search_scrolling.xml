@@ -41,9 +41,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/activity_vertical_margin"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:background="@color/white">
 
                 <TextView
@@ -77,9 +76,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/activity_vertical_margin"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:background="@color/white">
 
                 <TextView
@@ -90,21 +88,21 @@
                     android:layout_centerInParent="true"
                     android:layout_margin="@dimen/text_margin"
                     android:gravity="left"
-                    android:text="N\A" />
+                    android:text="NA" />
 
             </android.support.v7.widget.CardView>
 
             <TextView
-                android:id="@+id/textLabelAddress"
+                android:id="@+id/textLabelReviews"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerInParent="true"
                 android:layout_gravity="center"
                 android:layout_weight="3"
-                android:drawableLeft="@drawable/ic_directions_walk_red_700_18dp"
+                android:drawableLeft="@drawable/ic_grade_red_700_18dp"
                 android:gravity="center"
-                android:text="Address"
+                android:text="Rating/Reviews"
                 android:textAlignment="center"
                 android:textColor="@color/black" />
 
@@ -113,22 +111,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/activity_vertical_margin"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:background="@color/white">
 
-                <TextView
-                    android:id="@+id/txtViewAddress"
+                <RatingBar
+                    android:id="@+id/ratingBar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerInParent="true"
-                    android:layout_margin="@dimen/text_margin"
-                    android:gravity="left"
-                    android:text="Text" />
-
+                    android:layout_gravity="center" />
             </android.support.v7.widget.CardView>
+
 
             <TextView
                 android:id="@+id/textLabelMap"
@@ -140,18 +133,35 @@
                 android:layout_weight="3"
                 android:drawableLeft="@drawable/ic_room_red_700_18dp"
                 android:gravity="center"
-                android:text="Locate Me"
+                android:text="Locate Us"
                 android:textAlignment="center"
                 android:textColor="@color/black" />
+
+            <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="@color/white">
+
+                <TextView
+                    android:id="@+id/txtViewAddress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerInParent="true"
+                    android:layout_margin="@dimen/text_margin"
+                    android:gravity="left"
+                    android:text="Text" />
+            </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/fourthInfoCardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/activity_vertical_margin"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:background="@color/white">
 
                 <include
