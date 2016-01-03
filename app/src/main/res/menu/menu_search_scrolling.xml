@@ -2,9 +2,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.streetsnax.srinidhi.streetsnax.SearchScrollingActivity">
+    <!--<item-->
+    <!--android:id="@+id/action_settings"-->
+    <!--android:orderInCategory="100"-->
+    <!--android:title="@string/action_settings"-->
+    <!--app:showAsAction="never" />-->
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_share"
+        android:icon="@drawable/ic_share_white_18dp"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+        android:title="Share"
+        app:showAsAction="always"></item>
 </menu>

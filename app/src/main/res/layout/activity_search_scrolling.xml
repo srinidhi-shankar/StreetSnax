@@ -52,8 +52,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
         android:background="@drawable/btnselector"
-        android:backgroundTint="@color/primary"
         android:src="@drawable/ic_directions_white_18dp"
+        app:backgroundTint="@color/primary"
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|end" />
 
