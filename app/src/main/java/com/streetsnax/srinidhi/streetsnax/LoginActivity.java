@@ -16,6 +16,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
@@ -77,6 +78,12 @@ public class LoginActivity extends AppCompatActivity {
         // Add all the images to the ViewFlipper
         for (int i = 0; i < 5; i++) {
             ImageView imageView = new ImageView(this);
+//            android:adjustViewBounds="true"
+//            android:scaleType="fitCenter"
+            imageView.setAdjustViewBounds(true);
+            imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
+            imageView.setLayoutParams(lp);
             String imageUrl = "http://lorempixel.com/420/300/food/streetsnax" + i;
             Picasso.with(this).load(imageUrl).into(imageView, new com.squareup.picasso.Callback() {
                 @Override

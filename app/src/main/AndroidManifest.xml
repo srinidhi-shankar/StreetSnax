@@ -42,6 +42,7 @@
             android:name=".SearchScrollingActivity"
             android:label="@string/title_activity_search_scrolling"
             android:parentActivityName=".MainActivity"
+            android:screenOrientation="sensorPortrait"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
