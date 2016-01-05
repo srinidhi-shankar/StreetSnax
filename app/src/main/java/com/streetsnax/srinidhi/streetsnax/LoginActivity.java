@@ -3,18 +3,33 @@ package com.streetsnax.srinidhi.streetsnax;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
 
+import com.squareup.picasso.Picasso;
 import com.streetsnax.srinidhi.streetsnax.models.Users;
+import com.streetsnax.srinidhi.streetsnax.utilities.AppConstants;
+import com.streetsnax.srinidhi.streetsnax.utilities.PasswordHash;
+import com.streetsnax.srinidhi.streetsnax.utilities.PrefUtil;
 
+import java.io.InputStream;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.HashMap;
 
 import dfapi.ApiException;
@@ -31,6 +46,8 @@ public class LoginActivity extends AppCompatActivity {
     Button _loginButton;
     TextView _signupLink;
     ProgressDialog progressDialog;
+    private ViewFlipper mViewFlipper;
+    private GestureDetector mGestureDetector;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,6 +73,41 @@ public class LoginActivity extends AppCompatActivity {
                 startActivityForResult(intent, REQUEST_SIGNUP);
             }
         });
+        // Get the ViewFlipper
+        mViewFlipper = (ViewFlipper) findViewById(R.id.loginviewFlipper);
+        // Add all the images to the ViewFlipper
+        for (int i = 0; i < 5; i++) {
+            ImageView imageView = new ImageView(this);
+//            android:adjustViewBounds="true"
+//            android:scaleType="fitCenter"
+            imageView.setAdjustViewBounds(true);
+            imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
+            imageView.setLayoutParams(lp);
+            String imageUrl = "http://lorempixel.com/420/300/food/streetsnax" + i;
+            Picasso.with(this).load(imageUrl).into(imageView, new com.squareup.picasso.Callback() {
+                @Override
+                public void onSuccess() {
+                    findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onError() {
+
+                }
+            });
+            //new DownloadImageTask(imageView).execute("http://lorempixel.com/480/320/food/");
+            //imageView.setImageResource(resources[i]);
+            mViewFlipper.addView(imageView);
+        }
+
+        // Set in/out flipping animations
+        mViewFlipper.setInAnimation(this, android.R.anim.fade_in);
+        mViewFlipper.setOutAnimation(this, android.R.anim.fade_out);
+        mViewFlipper.setAutoStart(true);
+        mViewFlipper.setFlipInterval(3000); // flip every 2 seconds (2000ms)
+        CustomGestureDetector customGestureDetector = new CustomGestureDetector();
+        mGestureDetector = new GestureDetector(this, customGestureDetector);
     }
 
     public void login() {
@@ -146,6 +198,15 @@ public class LoginActivity extends AppCompatActivity {
         return valid;
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        Log.v("StreetMotion", "true");
+        if (mGestureDetector.onTouchEvent(event))
+            return true;
+        else
+            return super.onTouchEvent(event);
+    }
+
     public class GetLoginInfoTask extends BaseAsyncRequest {
 
         private Users userRecords;
@@ -160,7 +221,7 @@ public class LoginActivity extends AppCompatActivity {
 
             queryParams = new HashMap<>();
             // filter to only the contact_info records related to the contact
-            queryParams.put("filter", "email=" + email.trim() + "%20AND%20password=" + password.trim() + ""); //where conditions
+            queryParams.put("filter", "email=" + email.trim()); //where conditions
 
             // include API key and sessionToken
             applicationApiKey = AppConstants.API_KEY; //api key required to get the data
@@ -189,7 +250,19 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected void onCompletion(boolean success) {
             if (success) {
-                if (userRecords.userRecord.size() > 0)
+                Boolean isValidUser = false;
+                if (userRecords.userRecord.size() > 0) {
+                    try {
+                        String existingPassword = userRecords.userRecord.get(0).Password;
+                        if (PasswordHash.validatePassword(password, existingPassword))
+                            isValidUser = true;
+                    } catch (NoSuchAlgorithmException e) {
+                        e.printStackTrace();
+                    } catch (InvalidKeySpecException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (isValidUser)
                     onLoginSuccess();
                 else
                     onLoginFailed();
@@ -198,4 +271,55 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
     }
+
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+
+        public DownloadImageTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            bmImage.setImageBitmap(result);
+            findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+        }
+    }
+
+    class CustomGestureDetector extends GestureDetector.SimpleOnGestureListener {
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+
+            Log.v("StreetMotion", "true in filing");
+            // Swipe left (next)
+            if (e1.getX() > e2.getX()) {
+                mViewFlipper.showNext();
+            }
+
+            // Swipe right (previous)
+            if (e1.getX() < e2.getX()) {
+                mViewFlipper.showPrevious();
+            }
+
+            return super.onFling(e1, e2, velocityX, velocityY);
+        }
+
+        @Override
+        public boolean onDown(MotionEvent event) {
+            return true;
+        }
+    }
+
 }

@@ -1,4 +1,4 @@
-package com.streetsnax.srinidhi.streetsnax;
+package com.streetsnax.srinidhi.streetsnax.utilities;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -9,18 +9,20 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 
+import com.streetsnax.srinidhi.streetsnax.R;
+
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 public class MultiSelectionSpinner extends Spinner implements
         OnMultiChoiceClickListener {
+    public ArrayAdapter<String> simple_adapter;
+    public AlertDialog.Builder alertbuilder;
     String[] _items = null;
     boolean[] mSelection = null;
     boolean[] mSelectionAtStart = null;
     String _itemsAtStart = null;
-
-    ArrayAdapter<String> simple_adapter;
 
     public MultiSelectionSpinner(Context context) {
         super(context);
@@ -28,6 +30,7 @@ public class MultiSelectionSpinner extends Spinner implements
         simple_adapter = new ArrayAdapter<>(context,
                 R.layout.spinner_item);
         super.setAdapter(simple_adapter);
+        alertbuilder = new AlertDialog.Builder(getContext(), R.style.MyTransparentDialog);
     }
 
     public MultiSelectionSpinner(Context context, AttributeSet attrs) {
@@ -36,6 +39,7 @@ public class MultiSelectionSpinner extends Spinner implements
         simple_adapter = new ArrayAdapter<>(context,
                 R.layout.spinner_item);
         super.setAdapter(simple_adapter);
+        alertbuilder = new AlertDialog.Builder(getContext(),R.style.MyTransparentDialog);
     }
 
     public void onClick(DialogInterface dialog, int which, boolean isChecked) {
@@ -51,16 +55,15 @@ public class MultiSelectionSpinner extends Spinner implements
 
     @Override
     public boolean performClick() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setMultiChoiceItems(_items, mSelection, this);
+        alertbuilder.setMultiChoiceItems(_items, mSelection, this);
         _itemsAtStart = getSelectedItemsAsString();
-        builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+        alertbuilder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 System.arraycopy(mSelection, 0, mSelectionAtStart, 0, mSelection.length);
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        alertbuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 simple_adapter.clear();
@@ -68,7 +71,7 @@ public class MultiSelectionSpinner extends Spinner implements
                 System.arraycopy(mSelectionAtStart, 0, mSelection, 0, mSelectionAtStart.length);
             }
         });
-        builder.show();
+        alertbuilder.show();
         return true;
     }
 

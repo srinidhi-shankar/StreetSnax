@@ -1,22 +1,21 @@
 package com.streetsnax.srinidhi.streetsnax;
 
 import android.content.Intent;
-
-
-//import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageButton;
+import android.widget.Button;
+
+//import android.support.v7.app.ActionBarActivity;
 
 
 public class MainActivity extends AppCompatActivity {
 
 
-    ImageButton FAB;
+    FloatingActionButton FAB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,17 +23,26 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
             //uncomment this later while commiting to GIT
-//        Intent intent = new Intent(this, LoginActivity.class);
-//        startActivity(intent);
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
 
 
-        FAB = (ImageButton) findViewById(R.id.ibplus);
+        FAB = (FloatingActionButton) findViewById(R.id.ibplus);
 
 
         FAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, AddSnackPlace.class);
+                startActivity(intent);
+            }
+        });
+
+        Button searchButton = (Button) findViewById(R.id.btnSearch);
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SearchPageActivity.class);
                 startActivity(intent);
             }
         });

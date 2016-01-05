@@ -3,7 +3,7 @@ package dfapi;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.streetsnax.srinidhi.streetsnax.AppConstants;
+import com.streetsnax.srinidhi.streetsnax.utilities.AppConstants;
 
 import org.json.JSONException;
 import org.json.JSONObject;
