@@ -1,6 +1,12 @@
 <resources>
     <string name="app_name">StreetSnax</string>
-
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="action_back">back</string>
+
+    <string-array name="array_locality">
+        <item>K S Layout</item>
+        <item>ISRO layout</item>
+        <item>Whitefield</item>
+    </string-array>
 </resources>
