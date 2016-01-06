@@ -8,4 +8,15 @@
         <item name="android:windowSharedElementExitTransition">@android:transition/move</item>
     </style>
 
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
+    <style name="MyTransparentDialog" parent="@android:style/Theme.Material.Dialog">
+        <item name="android:windowBackground">@drawable/dialog_background_material</item>
+        <item name="android:background">@color/transaparent</item>
+    </style>
 </resources>

@@ -84,11 +84,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.streetsnax.srinidhi.streetsnax.LoginActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name="com.streetsnax.srinidhi.streetsnax.SignupActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <!--<activity android:name="com.streetsnax.srinidhi.streetsnax.AddSnackPlace" android:theme="@style/AppTheme.Dark" />-->
-
-        <activity android:name="com.streetsnax.srinidhi.streetsnax.AddSnackPlace" android:theme="@style/AppTheme.Dark" />
     </application>
 
 </manifest>

@@ -17,7 +17,7 @@
             layout="@layout/toolbar" />
 
 
-        <com.streetsnax.srinidhi.streetsnax.MultiSelectionSpinner
+        <com.streetsnax.srinidhi.streetsnax.utilities.MultiSelectionSpinner
             android:id="@+id/mySpinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
@@ -318,18 +318,18 @@
         </HorizontalScrollView>
 
         <TextView
+            android:id="@+id/textView7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Give this place a Rating"
-            android:id="@+id/textView7"
+            android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
-            android:layout_marginLeft="10dp"/>
+            android:text="Give this place a Rating"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <RatingBar
+            android:id="@+id/ratingBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/ratingBar"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             />
