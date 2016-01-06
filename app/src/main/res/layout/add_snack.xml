@@ -1,23 +1,338 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:http="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="false"
     android:orientation="vertical"
-    android:weightSum="1">
+    android:padding="10dp">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/my_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        android:elevation="4dp"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        />
-
-    <com.streetsnax.srinidhi.streetsnax.utilities.MultiSelectionSpinner
-        android:id="@+id/mySpinner"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        />
+        android:orientation="vertical">
 
-</LinearLayout>
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar" />
+
+
+        <com.streetsnax.srinidhi.streetsnax.MultiSelectionSpinner
+            android:id="@+id/mySpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+
+        <Spinner
+            android:id="@+id/spnlocality"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/array_locality"
+            android:spinnerMode="dropdown"
+            android:textSize="23dp" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Landmark"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#111111" />
+
+        <EditText
+            android:id="@+id/etlandmark"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/rounded_corner"
+            android:gravity="left|top"
+            android:hint="Landmark"
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="10dp"
+            android:scrollbars="horizontal"
+            android:singleLine="true"
+            android:textSize="23dp" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Place name"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#111111" />
+
+        <EditText
+            android:id="@+id/etSnackplacname"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/rounded_corner"
+            android:gravity="left|top"
+            android:hint="Place Name"
+            android:maxLines="1"
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="10dp"
+            android:scrollbars="horizontal"
+            android:singleLine="true"
+            android:textSize="23dp" />
+
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Description"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#111111" />
+
+        <EditText
+            android:id="@+id/etdesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
+            android:layout_weight="0.04"
+            android:background="@drawable/rounded_corner"
+            android:ems="10"
+            android:gravity="left|top"
+            android:hint="Tell us how to get there..\nEx: Opposite to the park, under the tree"
+            android:inputType="textMultiLine"
+            android:lines="4"
+            android:maxLines="4"
+            android:minLines="4"
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="10dp"
+            android:scrollbars="vertical"
+            android:textSize="23dp" />
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/rounded_corner">
+
+            <TextView
+                android:id="@+id/tvtimingheader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="7dp"
+                android:layout_marginTop="5dp"
+                android:text="Available during"
+                android:textColor="#111111"
+                android:textSize="18dp" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvtimingheader"
+                android:layout_marginBottom="5dp"
+                android:orientation="horizontal">
+
+                <RadioGroup
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:orientation='horizontal'>
+
+
+                    <RadioButton
+                        android:id="@+id/rbweekdays"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:checked="true"
+                        android:text="Weekdays"
+                        android:textColor="#111111"
+                        android:textSize="18dp" />
+
+                    <RadioButton
+                        android:id="@+id/rbweekends"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="false"
+                        android:text="Weekends"
+                        android:textColor="#111111"
+                        android:textSize="18dp" />
+
+                    <RadioButton
+                        android:id="@+id/rbboth"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:checked="false"
+                        android:text="Both"
+                        android:textColor="#111111"
+                        android:textSize="18dp" />
+                </RadioGroup>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/rounded_corner">
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="7dp"
+                android:layout_marginTop="15dp"
+                android:text="Timings:  "
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#111111" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="7">
+
+                <EditText
+                    android:id="@+id/etstarttime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_weight="2.00"
+                    android:focusable="false"
+                    android:hint="Start time"
+                    android:textAlignment="center" />
+
+
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="To"
+                    android:textAlignment="center"
+                    android:textSize="20dp" />
+
+                <EditText
+                    android:id="@+id/etendtime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2.23"
+                    android:focusable="false"
+                    android:hint="End time"
+                    android:textAlignment="center" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="fill_parent"
+            android:layout_height="35dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="15dp"
+            android:background="#D5D7D6"
+            android:paddingLeft="10dp"
+            android:paddingRight="2dp"
+            android:paddingTop="2dp"
+            android:text="Show us the place on the map "
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#111111" />
+
+        <LinearLayout
+            android:id="@+id/linearlytmap"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent">
+
+            <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.MapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="300dp" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnpickplace"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Pick a place" />
+
+        <TextView
+            android:id="@+id/tvphotoaddheader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:text="Add Photos"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <HorizontalScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:fillViewport="true"
+            android:scrollbars="horizontal">
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <ImageButton
+                android:id="@+id/ibaddpic1"
+                android:layout_width="86dp"
+                android:layout_height="100dp"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1.58"
+                android:src="@drawable/plus" />
+
+            <ImageButton
+                android:id="@+id/ibaddpic2"
+                android:layout_width="86dp"
+                android:layout_height="100dp"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/ibaddpic1"
+                android:layout_weight="1.58"
+                android:src="@drawable/plus" />
+
+            <ImageButton
+                android:id="@+id/ibaddpic3"
+                android:layout_width="86dp"
+                android:layout_height="100dp"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/ibaddpic2"
+                android:layout_weight="1.58"
+                android:src="@drawable/plus" />
+
+            <ImageButton
+                android:id="@+id/ibaddpic4"
+                android:layout_width="86dp"
+                android:layout_height="100dp"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/ibaddpic3"
+                android:layout_weight="1.58"
+                android:src="@drawable/plus" />
+        </RelativeLayout>
+        </HorizontalScrollView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Give this place a Rating"
+            android:id="@+id/textView7"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"/>
+
+        <RatingBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ratingBar"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            />
+    </LinearLayout>
+
+</ScrollView>
