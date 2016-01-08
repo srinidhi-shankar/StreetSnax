@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.streetsnax.srinidhi.streetsnax.SearchSubmitChooseActivity">
+
+    <TextView
+        android:id="@+id/textViewHiddenPlaceID"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:visibility="invisible" />
+
+    <com.streetsnax.srinidhi.streetsnax.utilities.MultiSelectionSpinner
+        android:id="@+id/mySpinner"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/edit_text_style"
+        android:drawableLeft="@drawable/search"
+        android:drawablePadding="9dp"
+        android:hint="Search a snack"
+        android:paddingLeft="8dp"
+        android:paddingRight="9dp"
+        android:textColor="@android:color/primary_text_light"
+        android:textColorHint="@color/grey"
+        android:visibility="invisible" />
+
+    <net.sf.sprockets.widget.GooglePlaceAutoComplete xmlns:sprockets="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/googlePlacesAutoComplete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        sprockets:countries="IN"
+        sprockets:language="iw"
+        sprockets:matchedSubstringColor="@color/black"
+        sprockets:types="geocode" />
+
+    <RelativeLayout
+        android:id="@+id/snackLayout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/googlePlacesAutoComplete"
+        android:background="@color/primary_dark"
+        android:clickable="true"
+        android:visibility="invisible">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="60dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="12dp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/ic_local_restaurant_white_18dp" />
+        <!--android:drawableLeft="@drawable/search"-->
+        <TextView
+            android:id="@+id/textViewTitle"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="60dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="16dp"
+            android:drawablePadding="10dp"
+            android:drawableTint="@color/white"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:gravity="left"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:text="Choose snacks.."
+            android:textColor="@color/white"
+            android:visibility="invisible" />
+
+        <HorizontalScrollView
+            android:id="@+id/snackHorizontalScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="60dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginTop="10dp"
+            android:animateLayoutChanges="true"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:gravity="bottom"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:id="@+id/snackLayoutLinear"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:gravity="right"
+                android:orientation="horizontal">
+
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="60dp"
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="right"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="12dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitStart"
+            android:src="@drawable/ic_search_white_18dp" />
+    </RelativeLayout>
+</RelativeLayout>
