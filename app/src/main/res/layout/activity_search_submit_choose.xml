@@ -47,7 +47,7 @@
         android:layout_below="@id/googlePlacesAutoComplete"
         android:background="@color/primary_dark"
         android:clickable="true"
-        android:visibility="invisible">
+        android:visibility="visible">
 
         <ImageView
             android:layout_width="20dp"

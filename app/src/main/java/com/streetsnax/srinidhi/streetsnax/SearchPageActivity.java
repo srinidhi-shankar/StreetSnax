@@ -116,14 +116,16 @@ public class SearchPageActivity extends AppCompatActivity
         multiSelectionSpinner = (MultiSelectionSpinner) findViewById(R.id.mySpinner);
         new GetSnackTypeTask().execute();
         multiSelectionSpinner.setVisibility(View.INVISIBLE);
-
         mPlace.setOnPlaceClickListener(new GooglePlaceAutoComplete.OnPlaceClickListener() {
             @Override
             public void onPlaceClick(AdapterView<?> parent, net.sf.sprockets.google.Place.Prediction place, int position) {
+                mPlace.clearFocus();
                 hidekeyboard();
                 if (place != null) {
                     setTitle(mPlace.getText());
+                    placeAddress = mPlace.getText().toString();
                     mPlace.setVisibility(View.INVISIBLE);
+                    snackLayout.setVisibility(View.VISIBLE);
                     getSupportActionBar().show();
                     final String placeId = String.valueOf(place.getPlaceId().getId());
                     PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi.getPlaceById(mGoogleApiClient, placeId);
@@ -134,13 +136,9 @@ public class SearchPageActivity extends AppCompatActivity
                                 latlong = String.valueOf(places.get(0).getLatLng());
                                 textViewHiddenPlaceID.setText(placeId);
                                 myActionMenuItem.collapseActionView();
-                                placeAddress = places.get(0).getAddress().toString();
-                                setTitle(places.get(0).getName());
+                                //placeAddress = places.get(0).getAddress().toString();
+                                //setTitle(places.get(0).getName());
                                 mPlace.setText("");
-                                textViewTitle.setText("Choose Snacks..");
-                                textViewTitle.setVisibility(View.VISIBLE);
-                                snackHorizontalScrollView.setVisibility(View.INVISIBLE);
-                                snackLayout.setVisibility(View.VISIBLE);
                             } else {
                                 Toast.makeText(getApplicationContext(), AppConstants.SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show();
                             }
@@ -204,6 +202,8 @@ public class SearchPageActivity extends AppCompatActivity
                 textViewTitle.setVisibility(View.INVISIBLE);
             }
         });
+        snackLayout.setVisibility(View.GONE);
+
 
         searchListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -305,7 +305,7 @@ public class SearchPageActivity extends AppCompatActivity
         } else if (id == R.id.action_search) {
             getSupportActionBar().hide();
             searchLayoutView.setVisibility(View.VISIBLE);
-            snackLayout.setVisibility(View.INVISIBLE);
+            snackLayout.setVisibility(View.GONE);
             mPlace.setVisibility(View.VISIBLE);
             mPlace.requestFocus();
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -401,7 +401,7 @@ public class SearchPageActivity extends AppCompatActivity
                     (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             inputManager.hideSoftInputFromWindow(
                     this.getCurrentFocus().getWindowToken(),
-                    InputMethodManager.HIDE_NOT_ALWAYS);
+                    InputMethodManager.HIDE_IMPLICIT_ONLY);
         } catch (NullPointerException ex) {
             ex.printStackTrace();
         }
