@@ -1,7 +1,10 @@
 package com.streetsnax.srinidhi.streetsnax;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -10,7 +13,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,16 +52,16 @@ public class SearchSubmitChooseActivity extends AppCompatActivity implements Goo
     private MultiSelectionSpinner multiSelectionSpinner;
     private TextView textViewTitle;
     private RelativeLayout snackLayout;
+    private RelativeLayout searchLayout;
     private HorizontalScrollView snackHorizontalScrollView;
     private LinearLayout snackLayoutLinear;
-    private ListView searchListView;
-    private TextView searchTextContent;
-    private TextView snackPlaceName;
+    private TextView textViewGoogleSearch;
     private ArrayList<ItemDetails> item_details;
     private TextView textViewHiddenPlaceID;
     private String latlong;
     private GooglePlaceAutoComplete mPlace;
     private String placeAddress;
+    private FloatingActionButton ibplus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,13 +70,13 @@ public class SearchSubmitChooseActivity extends AppCompatActivity implements Goo
         setContentView(R.layout.activity_search_submit_choose);
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
+        searchLayout = (RelativeLayout) findViewById(R.id.searchLayout);
         snackLayout = (RelativeLayout) findViewById(R.id.snackLayout);
         snackHorizontalScrollView = (HorizontalScrollView) findViewById(R.id.snackHorizontalScrollView);
         snackLayoutLinear = (LinearLayout) findViewById(R.id.snackLayoutLinear);
-        searchListView = (ListView) findViewById(R.id.searchListView);
-        searchTextContent = (TextView) findViewById(R.id.searchTextContent);
         textViewHiddenPlaceID = (TextView) findViewById(R.id.textViewHiddenPlaceID);
-        snackPlaceName = (TextView) findViewById(R.id.snackPlaceName);
+        textViewGoogleSearch = (TextView) findViewById(R.id.textViewGoogleSearch);
+        ibplus = (FloatingActionButton) findViewById(R.id.ibplus);
         //ScrollViewSearchPageContent.setVisibility(View.INVISIBLE);
         snackHorizontalScrollView.setVisibility(View.INVISIBLE);
         mPlace = (GooglePlaceAutoComplete) findViewById(R.id.googlePlacesAutoComplete);
@@ -82,11 +84,26 @@ public class SearchSubmitChooseActivity extends AppCompatActivity implements Goo
         new GetSnackTypeTask().execute();
         multiSelectionSpinner.setVisibility(View.INVISIBLE);
 
+        ibplus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(SearchSubmitChooseActivity.this, AddSnackPlace.class);
+                startActivity(intent);
+            }
+        });
+
         mPlace.setOnPlaceClickListener(new GooglePlaceAutoComplete.OnPlaceClickListener() {
             @Override
             public void onPlaceClick(AdapterView<?> parent, net.sf.sprockets.google.Place.Prediction place, int position) {
+                mPlace.clearFocus();
                 hidekeyboard();
                 if (place != null) {
+                    //setTitle(mPlace.getText());
+                    placeAddress = mPlace.getText().toString();
+                    textViewGoogleSearch.setText(placeAddress);
+                    searchLayout.setVisibility(View.VISIBLE);
+                    mPlace.setVisibility(View.GONE);
+                    snackLayout.setVisibility(View.VISIBLE);
                     final String placeId = String.valueOf(place.getPlaceId().getId());
                     PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi.getPlaceById(mGoogleApiClient, placeId);
                     placeResult.setResultCallback(new ResultCallback<PlaceBuffer>() {
@@ -95,12 +112,11 @@ public class SearchSubmitChooseActivity extends AppCompatActivity implements Goo
                             if (places.getCount() == 1) {
                                 latlong = String.valueOf(places.get(0).getLatLng());
                                 textViewHiddenPlaceID.setText(placeId);
-                                placeAddress = places.get(0).getAddress().toString();
-                                mPlace.setText(places.get(0).getName());
-                                textViewTitle.setText("Choose Snacks..");
-                                textViewTitle.setVisibility(View.VISIBLE);
-                                snackHorizontalScrollView.setVisibility(View.INVISIBLE);
-                                snackLayout.setVisibility(View.VISIBLE);
+                                //placeAddress = places.get(0).getAddress().toString();
+                                //setTitle(places.get(0).getName());
+                                mPlace.setText("");
+                                if (snackHorizontalScrollView.getVisibility() == View.VISIBLE)
+                                    GetSnackResults();
                             } else {
                                 Toast.makeText(getApplicationContext(), AppConstants.SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show();
                             }
@@ -109,6 +125,49 @@ public class SearchSubmitChooseActivity extends AppCompatActivity implements Goo
                 }
             }
         });
+
+        multiSelectionSpinner.alertbuilder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(final DialogInterface dialog) {
+                //Do some work
+                textViewTitle.setText(multiSelectionSpinner.getSelectedItemsAsString());
+                //searchPageProgressBar.setVisibility(View.VISIBLE);
+                //searchListView.removeAllViews();
+                if (textViewTitle.getText().length() <= 1) {
+                    textViewTitle.setText("Choose Snacks..");
+                    textViewTitle.setVisibility(View.VISIBLE);
+                    snackHorizontalScrollView.setVisibility(View.INVISIBLE);
+                } else {
+                    snackHorizontalScrollView.setVisibility(View.VISIBLE);
+                    textViewTitle.setVisibility(View.INVISIBLE);
+                    GetSnackResults();
+                    snackHorizontalScrollView.fullScroll(HorizontalScrollView.FOCUS_LEFT);
+                }
+                //searchLayoutView.setVisibility(View.INVISIBLE);
+                //getActionBar().show();
+            }
+        });
+
+        snackLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                multiSelectionSpinner.performClick();
+                textViewTitle.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        searchLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mPlace.setVisibility(View.VISIBLE);
+                mPlace.requestFocus();
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+                searchLayout.setVisibility(View.GONE);
+            }
+        });
+
+        snackLayout.setVisibility(View.GONE);
     }
 
     @Override
@@ -148,13 +207,12 @@ public class SearchSubmitChooseActivity extends AppCompatActivity implements Goo
     }
 
     public void hidekeyboard() {
-
         try {
             InputMethodManager inputManager =
                     (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             inputManager.hideSoftInputFromWindow(
                     this.getCurrentFocus().getWindowToken(),
-                    InputMethodManager.HIDE_NOT_ALWAYS);
+                    0);
         } catch (NullPointerException ex) {
             ex.printStackTrace();
         }
@@ -168,7 +226,42 @@ public class SearchSubmitChooseActivity extends AppCompatActivity implements Goo
                 .build();
     }
 
+    private void GetSnackResults() {
+        List<String> snackList = multiSelectionSpinner.getSelectedStrings();
+        if (snackLayoutLinear.getChildCount() > 0)
+            snackLayoutLinear.removeAllViews();
+        for (int i = 0; i < snackList.size(); i++) {
+            TextView rowTextView = new TextView(SearchSubmitChooseActivity.this);
+            rowTextView.setText(snackList.get(i));
+            //rowTextView.setAllCaps(true);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+            params.setMargins(0, 0, 10, 0);
+            rowTextView.setLayoutParams(params);
+            rowTextView.setPadding(10, 10, 10, 10);
+            rowTextView.setBackgroundResource(R.drawable.tags);
+            snackLayoutLinear.addView(rowTextView);
+        }
+        item_details = GetSearchResults(placeAddress, textViewTitle.getText().toString());
+        //searchListView.setAdapter(new ItemListBaseAdapter(SearchSubmitChooseActivity.this, item_details));
+        //searchPageProgressBar.setVisibility(View.INVISIBLE);
+    }
 
+    private ArrayList<ItemDetails> GetSearchResults(String locationAddress, String snackType) {
+        ArrayList<ItemDetails> results = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            ItemDetails itemDetails = new ItemDetails();
+            String imageSrc = "http://lorempixel.com/400/200/food/SnackPlaceName" + i;
+            itemDetails.setItemImageSrc(imageSrc);
+            itemDetails.setplaceAddress(locationAddress);
+            itemDetails.setsnackType(snackType);
+            itemDetails.setplaceID(textViewHiddenPlaceID.getText().toString());
+            itemDetails.setlatlong(latlong);
+            itemDetails.setsnackPlaceName("SnackPlaceName #" + i);
+            results.add(itemDetails);
+        }
+
+        return results;
+    }
     public void createSpinner(List<Snack> snackRecords) {
         String[] snackArray = new String[snackRecords.size()];
         int count = 0;
