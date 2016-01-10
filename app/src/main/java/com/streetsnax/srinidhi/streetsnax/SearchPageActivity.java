@@ -139,6 +139,8 @@ public class SearchPageActivity extends AppCompatActivity
                                 //placeAddress = places.get(0).getAddress().toString();
                                 //setTitle(places.get(0).getName());
                                 mPlace.setText("");
+                                if (snackHorizontalScrollView.getVisibility() == View.VISIBLE)
+                                    GetSnackResults();
                             } else {
                                 Toast.makeText(getApplicationContext(), AppConstants.SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show();
                             }
@@ -152,11 +154,8 @@ public class SearchPageActivity extends AppCompatActivity
             public void onDismiss(final DialogInterface dialog) {
                 //Do some work
                 textViewTitle.setText(multiSelectionSpinner.getSelectedItemsAsString());
-                List<String> snackList = multiSelectionSpinner.getSelectedStrings();
                 searchPageProgressBar.setVisibility(View.VISIBLE);
                 //searchListView.removeAllViews();
-                if (snackLayoutLinear.getChildCount() > 0)
-                    snackLayoutLinear.removeAllViews();
                 if (textViewTitle.getText().length() <= 1) {
                     textViewTitle.setText("Choose Snacks..");
                     textViewTitle.setVisibility(View.VISIBLE);
@@ -164,20 +163,7 @@ public class SearchPageActivity extends AppCompatActivity
                 } else {
                     snackHorizontalScrollView.setVisibility(View.VISIBLE);
                     textViewTitle.setVisibility(View.INVISIBLE);
-                    for (int i = 0; i < snackList.size(); i++) {
-                        TextView rowTextView = new TextView(SearchPageActivity.this);
-                        rowTextView.setText(snackList.get(i));
-                        //rowTextView.setAllCaps(true);
-                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                        params.setMargins(0, 0, 10, 0);
-                        rowTextView.setLayoutParams(params);
-                        rowTextView.setPadding(10, 10, 10, 10);
-                        rowTextView.setBackgroundResource(R.drawable.tags);
-                        snackLayoutLinear.addView(rowTextView);
-                    }
-                    item_details = GetSearchResults(placeAddress, textViewTitle.getText().toString());
-                    searchListView.setAdapter(new ItemListBaseAdapter(SearchPageActivity.this, item_details));
-                    searchPageProgressBar.setVisibility(View.INVISIBLE);
+                    GetSnackResults();
                     snackHorizontalScrollView.fullScroll(HorizontalScrollView.FOCUS_LEFT);
                 }
                 //searchLayoutView.setVisibility(View.INVISIBLE);
@@ -224,6 +210,26 @@ public class SearchPageActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    private void GetSnackResults() {
+        List<String> snackList = multiSelectionSpinner.getSelectedStrings();
+        if (snackLayoutLinear.getChildCount() > 0)
+            snackLayoutLinear.removeAllViews();
+        for (int i = 0; i < snackList.size(); i++) {
+            TextView rowTextView = new TextView(SearchPageActivity.this);
+            rowTextView.setText(snackList.get(i));
+            //rowTextView.setAllCaps(true);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+            params.setMargins(0, 0, 10, 0);
+            rowTextView.setLayoutParams(params);
+            rowTextView.setPadding(10, 10, 10, 10);
+            rowTextView.setBackgroundResource(R.drawable.tags);
+            snackLayoutLinear.addView(rowTextView);
+        }
+        item_details = GetSearchResults(placeAddress, textViewTitle.getText().toString());
+        searchListView.setAdapter(new ItemListBaseAdapter(SearchPageActivity.this, item_details));
+        searchPageProgressBar.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -400,8 +406,7 @@ public class SearchPageActivity extends AppCompatActivity
             InputMethodManager inputManager =
                     (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             inputManager.hideSoftInputFromWindow(
-                    this.getCurrentFocus().getWindowToken(),
-                    InputMethodManager.HIDE_IMPLICIT_ONLY);
+                    this.getCurrentFocus().getWindowToken(), 0);
         } catch (NullPointerException ex) {
             ex.printStackTrace();
         }
