@@ -32,6 +32,7 @@ import com.streetsnax.srinidhi.streetsnax.utilities.AppConstants;
 import com.streetsnax.srinidhi.streetsnax.utilities.ItemDetails;
 import com.streetsnax.srinidhi.streetsnax.utilities.MultiSelectionSpinner;
 import com.streetsnax.srinidhi.streetsnax.utilities.PrefUtil;
+import com.streetsnax.srinidhi.streetsnax.utilities.SearchBundleData;
 
 import net.sf.sprockets.widget.GooglePlaceAutoComplete;
 
@@ -142,6 +143,14 @@ public class SearchSubmitChooseActivity extends AppCompatActivity implements Goo
                     textViewTitle.setVisibility(View.INVISIBLE);
                     GetSnackResults();
                     snackHorizontalScrollView.fullScroll(HorizontalScrollView.FOCUS_LEFT);
+                    SearchBundleData searchBundleData = new SearchBundleData();
+                    searchBundleData.setlatlong(latlong);
+                    searchBundleData.setplaceID(textViewHiddenPlaceID.getText().toString());
+                    searchBundleData.setplaceAddress(placeAddress);
+                    searchBundleData.setsnackTypes(multiSelectionSpinner.getSelectedItemsAsString());
+                    Intent intent = new Intent(SearchSubmitChooseActivity.this, SearchPageActivity.class);
+                    intent.putExtra("SearchBundleData", searchBundleData);
+                    startActivity(intent);
                 }
                 //searchLayoutView.setVisibility(View.INVISIBLE);
                 //getActionBar().show();

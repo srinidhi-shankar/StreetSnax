@@ -47,10 +47,12 @@ import com.streetsnax.srinidhi.streetsnax.utilities.AppConstants;
 import com.streetsnax.srinidhi.streetsnax.utilities.ItemDetails;
 import com.streetsnax.srinidhi.streetsnax.utilities.MultiSelectionSpinner;
 import com.streetsnax.srinidhi.streetsnax.utilities.PrefUtil;
+import com.streetsnax.srinidhi.streetsnax.utilities.SearchBundleData;
 
 import net.sf.sprockets.widget.GooglePlaceAutoComplete;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -86,12 +88,18 @@ public class SearchPageActivity extends AppCompatActivity
     private String latlong;
     private GooglePlaceAutoComplete mPlace;
     private String placeAddress;
+    private SearchBundleData searchBundleData;
+
     //endregion
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         buildGoogleApiClient();
+        Bundle data = getIntent().getExtras();
+        if (data != null) {
+            searchBundleData = data.getParcelable("SearchBundleData");
+        }
         setContentView(R.layout.activity_search_page);
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         searchLayoutView = (LinearLayout) findViewById(R.id.searchLayoutView);
@@ -116,6 +124,7 @@ public class SearchPageActivity extends AppCompatActivity
         multiSelectionSpinner = (MultiSelectionSpinner) findViewById(R.id.mySpinner);
         new GetSnackTypeTask().execute();
         multiSelectionSpinner.setVisibility(View.INVISIBLE);
+
         mPlace.setOnPlaceClickListener(new GooglePlaceAutoComplete.OnPlaceClickListener() {
             @Override
             public void onPlaceClick(AdapterView<?> parent, net.sf.sprockets.google.Place.Prediction place, int position) {
@@ -140,7 +149,7 @@ public class SearchPageActivity extends AppCompatActivity
                                 //setTitle(places.get(0).getName());
                                 mPlace.setText("");
                                 if (snackHorizontalScrollView.getVisibility() == View.VISIBLE)
-                                    GetSnackResults();
+                                    GetSnackResults(multiSelectionSpinner.getSelectedStrings());
                             } else {
                                 Toast.makeText(getApplicationContext(), AppConstants.SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show();
                             }
@@ -163,7 +172,7 @@ public class SearchPageActivity extends AppCompatActivity
                 } else {
                     snackHorizontalScrollView.setVisibility(View.VISIBLE);
                     textViewTitle.setVisibility(View.INVISIBLE);
-                    GetSnackResults();
+                    GetSnackResults(multiSelectionSpinner.getSelectedStrings());
                     snackHorizontalScrollView.fullScroll(HorizontalScrollView.FOCUS_LEFT);
                 }
                 //searchLayoutView.setVisibility(View.INVISIBLE);
@@ -189,7 +198,19 @@ public class SearchPageActivity extends AppCompatActivity
             }
         });
         snackLayout.setVisibility(View.GONE);
-
+        if (searchBundleData != null) {
+            setTitle(searchBundleData.getplaceAddress());
+            placeAddress = searchBundleData.getplaceAddress();
+            latlong = searchBundleData.getlatlong();
+            textViewHiddenPlaceID.setText(searchBundleData.getplaceId());
+            snackLayout.setVisibility(View.VISIBLE);
+            //multiSelectionSpinner.setSelection(new ArrayList<>(Arrays.asList(searchBundleData.getsnackTypes().split(","))));
+            snackHorizontalScrollView.setVisibility(View.VISIBLE);
+            textViewTitle.setVisibility(View.INVISIBLE);
+            textViewTitle.setText(searchBundleData.getsnackTypes());
+            snackHorizontalScrollView.fullScroll(HorizontalScrollView.FOCUS_LEFT);
+            GetSnackResults(new ArrayList<>(Arrays.asList(searchBundleData.getsnackTypes().split(","))));
+        }
 
         searchListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -212,8 +233,8 @@ public class SearchPageActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    private void GetSnackResults() {
-        List<String> snackList = multiSelectionSpinner.getSelectedStrings();
+    private void GetSnackResults(List<String> snackList) {
+        //List<String> snackList = multiSelectionSpinner.getSelectedStrings();
         if (snackLayoutLinear.getChildCount() > 0)
             snackLayoutLinear.removeAllViews();
         for (int i = 0; i < snackList.size(); i++) {
