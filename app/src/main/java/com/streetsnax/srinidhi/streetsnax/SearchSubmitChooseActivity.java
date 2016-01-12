@@ -63,6 +63,7 @@ public class SearchSubmitChooseActivity extends AppCompatActivity implements Goo
     private GooglePlaceAutoComplete mPlace;
     private String placeAddress;
     private FloatingActionButton ibplus;
+    private RelativeLayout layoutGoogleAutocomplete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +82,7 @@ public class SearchSubmitChooseActivity extends AppCompatActivity implements Goo
         //ScrollViewSearchPageContent.setVisibility(View.INVISIBLE);
         snackHorizontalScrollView.setVisibility(View.INVISIBLE);
         mPlace = (GooglePlaceAutoComplete) findViewById(R.id.googlePlacesAutoComplete);
+        layoutGoogleAutocomplete = (RelativeLayout) findViewById(R.id.layoutGoogleAutocomplete);
         multiSelectionSpinner = (MultiSelectionSpinner) findViewById(R.id.mySpinner);
         new GetSnackTypeTask().execute();
         multiSelectionSpinner.setVisibility(View.INVISIBLE);
@@ -103,7 +105,8 @@ public class SearchSubmitChooseActivity extends AppCompatActivity implements Goo
                     placeAddress = mPlace.getText().toString();
                     textViewGoogleSearch.setText(placeAddress);
                     searchLayout.setVisibility(View.VISIBLE);
-                    mPlace.setVisibility(View.GONE);
+                    layoutGoogleAutocomplete.setVisibility(View.GONE);
+                    //mPlace.setVisibility(View.GONE);
                     snackLayout.setVisibility(View.VISIBLE);
                     final String placeId = String.valueOf(place.getPlaceId().getId());
                     PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi.getPlaceById(mGoogleApiClient, placeId);
@@ -168,7 +171,8 @@ public class SearchSubmitChooseActivity extends AppCompatActivity implements Goo
         searchLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mPlace.setVisibility(View.VISIBLE);
+                layoutGoogleAutocomplete.setVisibility(View.VISIBLE);
+                //mPlace.setVisibility(View.VISIBLE);
                 mPlace.requestFocus();
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);

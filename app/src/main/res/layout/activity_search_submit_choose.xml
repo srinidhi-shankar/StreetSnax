@@ -34,7 +34,7 @@
             android:layout_margin="@dimen/fab_margin"
             android:background="@drawable/btnselector"
             android:src="@drawable/plus"
-            app:backgroundTint="@color/primary" />
+            app:backgroundTint="@color/primary_dark" />
 
     </LinearLayout>
 
@@ -59,7 +59,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal|center_vertical"
-            android:layout_margin="@dimen/fab_margin"
+            android:layout_marginBottom="@dimen/fab_margin"
+            android:layout_marginTop="@dimen/fab_margin"
             android:orientation="vertical">
 
             <TextView
@@ -68,16 +69,36 @@
                 android:layout_height="wrap_content"
                 android:visibility="gone" />
 
-            <net.sf.sprockets.widget.GooglePlaceAutoComplete xmlns:sprockets="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/googlePlacesAutoComplete"
-                android:layout_width="match_parent"
+            <RelativeLayout
+                android:id="@+id/layoutGoogleAutocomplete"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:hint="Search place"
-                android:visibility="invisible"
-                sprockets:countries="IN"
-                sprockets:language="iw"
-                sprockets:matchedSubstringColor="@color/black"
-                sprockets:types="geocode" />
+                android:visibility="invisible">
+
+                <net.sf.sprockets.widget.GooglePlaceAutoComplete xmlns:sprockets="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/googlePlacesAutoComplete"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Search place"
+                    sprockets:countries="IN"
+                    sprockets:language="iw"
+                    sprockets:matchedSubstringColor="@color/black"
+                    sprockets:types="geocode" />
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentLeft="false"
+                    android:layout_alignParentRight="true"
+                    android:layout_gravity="right"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="12dp"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitStart"
+                    android:src="@drawable/ic_gps_fixed_black_18dp" />
+            </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/searchLayout"
