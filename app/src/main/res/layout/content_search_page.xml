@@ -31,21 +31,41 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <net.sf.sprockets.widget.GooglePlaceAutoComplete xmlns:sprockets="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/googlePlacesAutoComplete"
-            android:layout_width="match_parent"
+        <RelativeLayout
+            android:id="@+id/layoutGoogleAutocomplete"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:hint="Search places"
-            sprockets:countries="IN"
-            sprockets:language="iw"
-            sprockets:matchedSubstringColor="@color/black"
-            sprockets:types="geocode" />
+            android:visibility="invisible">
 
+            <net.sf.sprockets.widget.GooglePlaceAutoComplete xmlns:sprockets="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/googlePlacesAutoComplete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Search place"
+                sprockets:countries="IN"
+                sprockets:language="iw"
+                sprockets:matchedSubstringColor="@color/black"
+                sprockets:types="geocode" />
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="50dp"
+                android:layout_alignParentLeft="false"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="right"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="12dp"
+                android:adjustViewBounds="true"
+                android:scaleType="fitStart"
+                android:src="@drawable/ic_gps_fixed_black_18dp" />
+        </RelativeLayout>
         <RelativeLayout
             android:id="@+id/snackLayout"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_below="@id/googlePlacesAutoComplete"
+            android:layout_marginTop="40dp"
             android:background="@color/primary_dark"
             android:clickable="true"
             android:visibility="invisible">

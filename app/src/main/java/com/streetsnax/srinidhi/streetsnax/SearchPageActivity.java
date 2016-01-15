@@ -89,7 +89,7 @@ public class SearchPageActivity extends AppCompatActivity
     private GooglePlaceAutoComplete mPlace;
     private String placeAddress;
     private SearchBundleData searchBundleData;
-
+    private RelativeLayout layoutGoogleAutocomplete;
     //endregion
 
     @Override
@@ -121,6 +121,8 @@ public class SearchPageActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mPlace = (GooglePlaceAutoComplete) findViewById(R.id.googlePlacesAutoComplete);
+        layoutGoogleAutocomplete = (RelativeLayout) findViewById(R.id.layoutGoogleAutocomplete);
+        layoutGoogleAutocomplete.setVisibility(View.GONE);
         multiSelectionSpinner = (MultiSelectionSpinner) findViewById(R.id.mySpinner);
         new GetSnackTypeTask().execute();
         multiSelectionSpinner.setVisibility(View.INVISIBLE);
@@ -133,7 +135,8 @@ public class SearchPageActivity extends AppCompatActivity
                 if (place != null) {
                     setTitle(mPlace.getText());
                     placeAddress = mPlace.getText().toString();
-                    mPlace.setVisibility(View.INVISIBLE);
+                    //mPlace.setVisibility(View.INVISIBLE);
+                    layoutGoogleAutocomplete.setVisibility(View.GONE);
                     snackLayout.setVisibility(View.VISIBLE);
                     getSupportActionBar().show();
                     final String placeId = String.valueOf(place.getPlaceId().getId());
@@ -333,7 +336,8 @@ public class SearchPageActivity extends AppCompatActivity
             getSupportActionBar().hide();
             searchLayoutView.setVisibility(View.VISIBLE);
             snackLayout.setVisibility(View.GONE);
-            mPlace.setVisibility(View.VISIBLE);
+            layoutGoogleAutocomplete.setVisibility(View.VISIBLE);
+            //mPlace.setVisibility(View.VISIBLE);
             mPlace.requestFocus();
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);

@@ -104,7 +104,7 @@
                 android:id="@+id/searchLayout"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_below="@id/googlePlacesAutoComplete"
+                android:layout_below="@id/layoutGoogleAutocomplete"
                 android:background="@color/primary_dark"
                 android:clickable="true">
 
