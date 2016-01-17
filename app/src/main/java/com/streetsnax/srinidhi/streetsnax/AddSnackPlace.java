@@ -124,7 +124,7 @@ public class AddSnackPlace extends AppCompatActivity implements GoogleApiClient.
         progressDialog.setMessage("Retrieving data...");
         progressDialog.show();
 
-        new GetLoginInfoTask().execute();
+        LoadSnackTypes();
 
         mGoogleApiClient = new GoogleApiClient
                 .Builder(this)
@@ -232,6 +232,20 @@ public class AddSnackPlace extends AppCompatActivity implements GoogleApiClient.
         });
 
 
+    }
+
+    private void LoadSnackTypes() {
+        String snackResponse = PrefUtil.getString(getApplicationContext(), "tblSnackType");
+        try {
+            Snacks snackRecords = (Snacks) ApiInvoker.deserialize(snackResponse, "", Snacks.class);
+            if (snackRecords.snackRecord.size() > 0) {
+                createSpinner(snackRecords.snackRecord);
+                progressDialog.dismiss();
+            } else
+                new GetSnackTypeTask().execute();
+        } catch (ApiException e) {
+            e.printStackTrace();
+        }
     }
 
     public void OpenDialogBoxForCameraORGallery() {
@@ -485,11 +499,11 @@ public class AddSnackPlace extends AppCompatActivity implements GoogleApiClient.
         return true;
     }
 
-    public class GetLoginInfoTask extends BaseAsyncRequest {
+    public class GetSnackTypeTask extends BaseAsyncRequest {
 
         private Snacks snackRecords;
 
-        public GetLoginInfoTask() {
+        public GetSnackTypeTask() {
             callerName = "getSnackInfoTask";//any name
 
             serviceName = AppConstants.DB_SVC; //dreamfactory service base url

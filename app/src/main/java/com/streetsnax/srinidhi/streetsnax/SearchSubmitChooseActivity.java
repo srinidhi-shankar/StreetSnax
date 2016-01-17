@@ -84,7 +84,7 @@ public class SearchSubmitChooseActivity extends AppCompatActivity implements Goo
         mPlace = (GooglePlaceAutoComplete) findViewById(R.id.googlePlacesAutoComplete);
         layoutGoogleAutocomplete = (RelativeLayout) findViewById(R.id.layoutGoogleAutocomplete);
         multiSelectionSpinner = (MultiSelectionSpinner) findViewById(R.id.mySpinner);
-        new GetSnackTypeTask().execute();
+        LoadSnackTypes();
         multiSelectionSpinner.setVisibility(View.INVISIBLE);
 
         ibplus.setOnClickListener(new View.OnClickListener() {
@@ -282,6 +282,19 @@ public class SearchSubmitChooseActivity extends AppCompatActivity implements Goo
             snackArray[count++] = snack.SnackType;
         }
         multiSelectionSpinner.setItems(snackArray);
+    }
+
+    private void LoadSnackTypes() {
+        String snackResponse = PrefUtil.getString(getApplicationContext(), "tblSnackType");
+        try {
+            Snacks snackRecords = (Snacks) ApiInvoker.deserialize(snackResponse, "", Snacks.class);
+            if (snackRecords.snackRecord.size() > 0) {
+                createSpinner(snackRecords.snackRecord);
+            } else
+                new GetSnackTypeTask().execute();
+        } catch (ApiException e) {
+            e.printStackTrace();
+        }
     }
 
     //region DreamFactoryTask To Retrieve Snacks

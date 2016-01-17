@@ -124,7 +124,7 @@ public class SearchPageActivity extends AppCompatActivity
         layoutGoogleAutocomplete = (RelativeLayout) findViewById(R.id.layoutGoogleAutocomplete);
         layoutGoogleAutocomplete.setVisibility(View.GONE);
         multiSelectionSpinner = (MultiSelectionSpinner) findViewById(R.id.mySpinner);
-        new GetSnackTypeTask().execute();
+        LoadSnackTypes();
         multiSelectionSpinner.setVisibility(View.INVISIBLE);
 
         mPlace.setOnPlaceClickListener(new GooglePlaceAutoComplete.OnPlaceClickListener() {
@@ -255,6 +255,20 @@ public class SearchPageActivity extends AppCompatActivity
         searchListView.setAdapter(new ItemListBaseAdapter(SearchPageActivity.this, item_details));
         searchPageProgressBar.setVisibility(View.INVISIBLE);
     }
+
+    private void LoadSnackTypes() {
+        String snackResponse = PrefUtil.getString(getApplicationContext(), "tblSnackType");
+        try {
+            Snacks snackRecords = (Snacks) ApiInvoker.deserialize(snackResponse, "", Snacks.class);
+            if (snackRecords.snackRecord.size() > 0) {
+                createSpinner(snackRecords.snackRecord);
+            } else
+                new GetSnackTypeTask().execute();
+        } catch (ApiException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @Override
     public void onBackPressed() {
