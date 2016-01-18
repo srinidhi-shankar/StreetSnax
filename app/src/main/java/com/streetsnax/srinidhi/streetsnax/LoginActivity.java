@@ -82,7 +82,7 @@ public class LoginActivity extends AppCompatActivity {
 //            android:scaleType="fitCenter"
             imageView.setAdjustViewBounds(true);
             imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-            TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
+            TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
             imageView.setLayoutParams(lp);
             String imageUrl = "http://lorempixel.com/420/300/food/streetsnax" + i;
             Picasso.with(this).load(imageUrl).into(imageView, new com.squareup.picasso.Callback() {
