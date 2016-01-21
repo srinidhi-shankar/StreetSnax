@@ -17,6 +17,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -181,6 +183,15 @@ public class SearchSubmitChooseActivity extends AppCompatActivity implements Goo
         });
 
         snackLayout.setVisibility(View.GONE);
+
+        //example how to use showcaseview
+        //https://github.com/amlcurran/ShowcaseView
+        new ShowcaseView.Builder(this)
+                .setTarget(new ViewTarget(R.id.ibplus, this))
+                .setContentTitle("Submit")
+                .setContentText("click to submit snacks")
+                .hideOnTouchOutside()
+                .build();
     }
 
     @Override
