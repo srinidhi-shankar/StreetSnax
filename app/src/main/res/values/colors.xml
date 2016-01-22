@@ -24,4 +24,5 @@
     <color name="white">#FFFFFF</color>
     <color name="transaparent">#00000000</color>
     <color name="black_overlay">#66000000</color>
+    <color name="custom_showcase_bg">#b9002153</color>
 </resources>

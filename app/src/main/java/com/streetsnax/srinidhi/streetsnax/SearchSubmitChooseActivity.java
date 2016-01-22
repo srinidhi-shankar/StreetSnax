@@ -3,6 +3,13 @@ package com.streetsnax.srinidhi.streetsnax;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +24,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.amlcurran.showcaseview.OnShowcaseEventListener;
+import com.github.amlcurran.showcaseview.ShowcaseDrawer;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.google.android.gms.common.ConnectionResult;
@@ -46,7 +55,7 @@ import dfapi.ApiException;
 import dfapi.ApiInvoker;
 import dfapi.BaseAsyncRequest;
 
-public class SearchSubmitChooseActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class SearchSubmitChooseActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, OnShowcaseEventListener {
 
     //region Variables
     private static final LatLngBounds BOUNDS_INDIA = new LatLngBounds(
@@ -187,11 +196,14 @@ public class SearchSubmitChooseActivity extends AppCompatActivity implements Goo
         //example how to use showcaseview
         //https://github.com/amlcurran/ShowcaseView
         new ShowcaseView.Builder(this)
+                .withMaterialShowcase()
                 .setTarget(new ViewTarget(R.id.ibplus, this))
-                .setContentTitle("Submit")
-                .setContentText("click to submit snacks")
-                .hideOnTouchOutside()
+                .setContentTitle(R.string.showcase_title_submitsnack)
+                .setContentText(R.string.showcase_text_submitsnack)
+                .setShowcaseDrawer(new CustomShowcaseView(getResources()))
+                .setShowcaseEventListener(this)
                 .build();
+
     }
 
     @Override
@@ -308,6 +320,97 @@ public class SearchSubmitChooseActivity extends AppCompatActivity implements Goo
         }
     }
 
+    @Override
+    public void onShowcaseViewHide(ShowcaseView showcaseView) {
+        new ShowcaseView.Builder(this)
+                .withMaterialShowcase()
+                .setTarget(new ViewTarget(R.id.imgSearch, this))
+                .setContentTitle(R.string.showcase_title_searchsnack)
+                .setContentText(R.string.showcase_text_searchsnack)
+                .build();
+    }
+
+    @Override
+    public void onShowcaseViewDidHide(ShowcaseView showcaseView) {
+
+    }
+
+    @Override
+    public void onShowcaseViewShow(ShowcaseView showcaseView) {
+
+    }
+
+    //endregion
+    private static class CustomShowcaseView implements ShowcaseDrawer {
+
+        private final float width;
+        private final float height;
+        private final Paint eraserPaint;
+        private final Paint basicPaint;
+        private final int eraseColour;
+        private final RectF renderRect;
+
+        public CustomShowcaseView(Resources resources) {
+            width = resources.getDimension(R.dimen.custom_showcase_width);
+            height = resources.getDimension(R.dimen.custom_showcase_height);
+            PorterDuffXfermode xfermode = new PorterDuffXfermode(PorterDuff.Mode.MULTIPLY);
+            eraserPaint = new Paint();
+            eraserPaint.setColor(0xFFFFFF);
+            eraserPaint.setAlpha(0);
+            eraserPaint.setXfermode(xfermode);
+            eraserPaint.setAntiAlias(true);
+            eraseColour = resources.getColor(R.color.custom_showcase_bg);
+            basicPaint = new Paint();
+            renderRect = new RectF();
+        }
+
+        @Override
+        public void setShowcaseColour(int color) {
+            eraserPaint.setColor(color);
+        }
+
+        @Override
+        public void drawShowcase(Bitmap buffer, float x, float y, float scaleMultiplier) {
+            Canvas bufferCanvas = new Canvas(buffer);
+            renderRect.left = x - width / 2f;
+            renderRect.right = x + width / 2f;
+            renderRect.top = y - height / 2f;
+            renderRect.bottom = y + height / 2f;
+            bufferCanvas.drawRect(renderRect, eraserPaint);
+        }
+
+        @Override
+        public int getShowcaseWidth() {
+            return (int) width;
+        }
+
+        @Override
+        public int getShowcaseHeight() {
+            return (int) height;
+        }
+
+        @Override
+        public float getBlockedRadius() {
+            return width;
+        }
+
+        @Override
+        public void setBackgroundColour(int backgroundColor) {
+            // No-op, remove this from the API?
+        }
+
+        @Override
+        public void erase(Bitmap bitmapBuffer) {
+            bitmapBuffer.eraseColor(eraseColour);
+        }
+
+        @Override
+        public void drawToCanvas(Canvas canvas, Bitmap bitmapBuffer) {
+            canvas.drawBitmap(bitmapBuffer, 0, 0, basicPaint);
+        }
+
+    }
+
     //region DreamFactoryTask To Retrieve Snacks
     public class GetSnackTypeTask extends BaseAsyncRequest {
 
@@ -354,5 +457,5 @@ public class SearchSubmitChooseActivity extends AppCompatActivity implements Goo
             }
         }
     }
-    //endregion
+
 }

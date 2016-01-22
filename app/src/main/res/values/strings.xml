@@ -26,4 +26,9 @@
         <item>ISRO layout</item>
         <item>Whitefield</item>
     </string-array>
+
+    <string name="showcase_title_submitsnack"><b>Submit your favourite snack</b></string>
+    <string name="showcase_text_submitsnack">Found a new snack place? Please feed us the data</string>
+    <string name="showcase_title_searchsnack"><b>Search your favourite snack</b></string>
+    <string name="showcase_text_searchsnack">Find your nearest snack place</string>
 </resources>
