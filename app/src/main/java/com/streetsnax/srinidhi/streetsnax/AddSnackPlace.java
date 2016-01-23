@@ -2,15 +2,17 @@ package com.streetsnax.srinidhi.streetsnax;
 
 
 import android.app.AlertDialog;
-import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
-import android.content.res.Resources;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.DialogFragment;
@@ -52,10 +54,12 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.VisibleRegion;
 import com.streetsnax.srinidhi.streetsnax.models.Snack;
 import com.streetsnax.srinidhi.streetsnax.models.Snacks;
 import com.streetsnax.srinidhi.streetsnax.models.Tblsnackplace;
+import com.streetsnax.srinidhi.streetsnax.utilities.AppConstants;
+import com.streetsnax.srinidhi.streetsnax.utilities.MultiSelectionSpinner;
+import com.streetsnax.srinidhi.streetsnax.utilities.PrefUtil;
 import com.streetsnax.srinidhi.streetsnax.utilities.AppConstants;
 import com.streetsnax.srinidhi.streetsnax.utilities.MultiSelectionSpinner;
 import com.streetsnax.srinidhi.streetsnax.utilities.PrefUtil;
@@ -76,18 +80,19 @@ import dfapi.BaseAsyncRequest;
 public class AddSnackPlace extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener,
         GoogleApiClient.ConnectionCallbacks, OnMapReadyCallback {
 
-    private MultiSelectionSpinner multiSelectionSpinner;
-    ProgressDialog progressDialog;
-    GoogleApiClient mGoogleApiClient;
-    private int PLACE_PICKER_REQUEST = 1;
-    private Toolbar mToolbar;
+    private static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100, GALLERY_SELECT_IMAGE_REGUEST_CODE = 200;
     static EditText etstarttime, etendtime;
     static String time;
+    public int imgbtnid;
+    ProgressDialog progressDialog;
+    GoogleApiClient mGoogleApiClient;
     LatLng latlang = new LatLng(12.9667, 77.5667);//Bangalore
     MapFragment mapFragment;
     Marker marker;
     ImageButton ibaddpic1, ibaddpic2, ibaddpic3, ibaddpic4;
-    private static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100, GALLERY_SELECT_IMAGE_REGUEST_CODE = 200;
+    private MultiSelectionSpinner multiSelectionSpinner;
+    private int PLACE_PICKER_REQUEST = 1;
+    private Toolbar mToolbar;
     private Uri fileUri; // file url to store image/video
     public int imgbtnid;
     EditText etlandmark;
@@ -116,7 +121,7 @@ public class AddSnackPlace extends AppCompatActivity implements GoogleApiClient.
         progressDialog.setMessage("Retrieving data...");
         progressDialog.show();
 
-        new GetLoginInfoTask().execute();
+        LoadSnackTypes();
 
         mGoogleApiClient = new GoogleApiClient
                 .Builder(this)
@@ -179,7 +184,6 @@ public class AddSnackPlace extends AppCompatActivity implements GoogleApiClient.
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        Button btnpickplace = (Button) findViewById(R.id.btnpickplace);
         btnpickplace.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -233,6 +237,20 @@ public class AddSnackPlace extends AppCompatActivity implements GoogleApiClient.
         });
 
 
+    }
+
+    private void LoadSnackTypes() {
+        String snackResponse = PrefUtil.getString(getApplicationContext(), "tblSnackType");
+        try {
+            Snacks snackRecords = (Snacks) ApiInvoker.deserialize(snackResponse, "", Snacks.class);
+            if (snackRecords.snackRecord.size() > 0) {
+                createSpinner(snackRecords.snackRecord);
+                progressDialog.dismiss();
+            } else
+                new GetSnackTypeTask().execute();
+        } catch (ApiException e) {
+            e.printStackTrace();
+        }
     }
 
     public void OpenDialogBoxForCameraORGallery() {
@@ -597,11 +615,30 @@ public class AddSnackPlace extends AppCompatActivity implements GoogleApiClient.
         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 
-    public class GetLoginInfoTask extends BaseAsyncRequest {
+    public void createSpinner(List<Snack> snackRecords) {
+        String[] snackArray = new String[snackRecords.size()];
+        int count = 0;
+        for (Snack snack : snackRecords) {
+            snackArray[count++] = snack.SnackType;
+        }
+
+        multiSelectionSpinner = (MultiSelectionSpinner) findViewById(R.id.mySpinner);
+        multiSelectionSpinner.setItems(snackArray);
+        //multiSelectionSpinner.setSelection(new int[]{2, 6});
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    public class GetSnackTypeTask extends BaseAsyncRequest {
 
         private Snacks snackRecords;
 
-        public GetLoginInfoTask() {
+        public GetSnackTypeTask() {
             callerName = "getSnackInfoTask";//any name
 
             serviceName = AppConstants.DB_SVC; //dreamfactory service base url

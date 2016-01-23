@@ -8,8 +8,6 @@
     <color name="navigationBarColor">#000000</color>
     <color name="colorAccent">#FF80AB</color>
     <color name="primary_material_light_1">#5126bf</color>
-
-
     <color name="primary">#E43F3F</color>
     <color name="primary_dark">#C73100</color>
     <color name="primary_darker">#A62900</color>
@@ -25,6 +23,6 @@
     <color name="iron">#CCCCCC</color>
     <color name="white">#FFFFFF</color>
     <color name="transaparent">#00000000</color>
-
     <color name="black_overlay">#66000000</color>
+    <color name="custom_showcase_bg">#b9002153</color>
 </resources>

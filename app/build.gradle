@@ -3,8 +3,19 @@ apply plugin: 'com.android.application'
 android {
     useLibrary 'org.apache.http.legacy'
     packagingOptions {
-        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/DEPENDENCIES.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
         exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/dependencies.txt'
+        exclude 'META-INF/LGPL2.1'
+        exclude 'META-INF/maven/com.google.guava/guava/pom.properties'
+        exclude 'META-INF/maven/com.google.guava/guava/pom.xml'
+        exclude 'META-INF/services/javax.annotation.processing.Processor'
     }
     dexOptions {
         javaMaxHeapSize "4g"
@@ -13,7 +24,7 @@ android {
         config {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
-            storeFile file('C:/Users/i16881/.android/debug.keystore')
+            storeFile file('C:/Users/i15230/.android/debug.keystore')
             storePassword 'android'
         }
     }
@@ -30,12 +41,15 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
             signingConfig signingConfigs.config
         }
+    }
+    dexOptions {
+        javaMaxHeapSize "4g"
     }
 }
 
@@ -52,12 +66,11 @@ dependencies {
     compile 'com.google.android.gms:play-services-gcm:8.4.0'
     compile "org.apache.httpcomponents:httpmime:4.3"
     compile 'com.android.support:multidex:1.0.0'
-
     compile 'com.google.android.gms:play-services:8.4.0'
     compile 'com.android.support:recyclerview-v7:23.1.1'
     compile 'com.android.support:cardview-v7:23.1.1'
     compile 'com.android.support:support-v4:23.1.1'
-    compile 'com.android.support:multidex:1.0.0'
-    //compile files ('libs/picasso-2.5.2.jar')
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'net.sf.sprockets:sprockets-android:3.0.0'
+    compile 'com.github.amlcurran.showcaseview:library:5.4.0'
 }
