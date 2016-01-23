@@ -341,9 +341,10 @@ public class SearchPageActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        } else if (id == android.R.id.home) {
+//        if (id == R.id.action_settings) {
+//            return true;
+//        } else
+        if (id == android.R.id.home) {
             if (mRecyclerView != null && mRecyclerView.getVisibility() == View.VISIBLE)
                 mRecyclerView.setVisibility(View.INVISIBLE);
         }

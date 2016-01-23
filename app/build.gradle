@@ -20,7 +20,7 @@ android {
     compileSdkVersion 23
     buildToolsVersion '23.0.2'
     defaultConfig {
-        applicationId "com.streetsnax.srinidhi.streetsnax"
+        applicationId "com.streetsnax.srinidhi.streetsnaxs"
         minSdkVersion 19
         targetSdkVersion 23
         versionCode 1

@@ -38,7 +38,7 @@
 
         <activity
             android:name=".AddSnackPlace"
-            android:theme="@style/AppTheme.Dark" />
+            android:theme="@style/MyMaterialTheme" />
         <activity
             android:name=".SearchScrollingActivity"
             android:label="@string/title_activity_search_scrolling"
@@ -65,7 +65,7 @@
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAVt3gyuFBAF_0buPt8tMRMSagm8npA-cE" />
+            android:value="AIzaSyCmco1yj7LfoYzqlun1hCQ6mmAMFIokbmI" />
         <!--<meta-data-->
         <!--android:name="com.google.android.maps.v2.API_KEY"-->
         <!--android:value="AIzaSyAVt3gyuFBAF_0buPt8tMRMSagm8npA-cE" />-->
@@ -82,11 +82,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.streetsnax.srinidhi.streetsnax.LoginActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name="com.streetsnax.srinidhi.streetsnax.SignupActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <!--<activity android:name="com.streetsnax.srinidhi.streetsnax.AddSnackPlace" android:theme="@style/AppTheme.Dark" />-->
 
-        <activity android:name="com.streetsnax.srinidhi.streetsnax.AddSnackPlace" android:theme="@style/AppTheme.Dark" />
     </application>
 
 </manifest>

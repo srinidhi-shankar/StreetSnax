@@ -19,7 +19,7 @@
             android:id="@+id/infotoolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/primary_darker"
+            android:background="@color/colorPrimaryDark"
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
             app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Subhead"

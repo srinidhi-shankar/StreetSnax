@@ -31,7 +31,7 @@
         android:layout_margin="@dimen/fab_margin"
         android:background="@drawable/btnselector"
         android:src="@drawable/plus"
-        app:backgroundTint="@color/primary" />
+        app:backgroundTint="@color/colorPrimary" />
 </android.support.design.widget.CoordinatorLayout>
 
 

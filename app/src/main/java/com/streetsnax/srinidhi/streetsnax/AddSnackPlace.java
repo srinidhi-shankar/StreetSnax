@@ -31,6 +31,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.RatingBar;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -52,6 +55,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.VisibleRegion;
 import com.streetsnax.srinidhi.streetsnax.models.Snack;
 import com.streetsnax.srinidhi.streetsnax.models.Snacks;
+import com.streetsnax.srinidhi.streetsnax.models.Tblsnackplace;
+import com.streetsnax.srinidhi.streetsnax.utilities.AppConstants;
+import com.streetsnax.srinidhi.streetsnax.utilities.MultiSelectionSpinner;
+import com.streetsnax.srinidhi.streetsnax.utilities.PrefUtil;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -60,6 +67,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import dfapi.ApiException;
 import dfapi.ApiInvoker;
@@ -82,6 +90,14 @@ public class AddSnackPlace extends AppCompatActivity implements GoogleApiClient.
     private static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100, GALLERY_SELECT_IMAGE_REGUEST_CODE = 200;
     private Uri fileUri; // file url to store image/video
     public int imgbtnid;
+    EditText etlandmark;
+    float SnaxPlacerating=0;
+
+    //final variables for submit
+    List<String> SnaxStringsMultiSelectionSpinner;
+    String landmark,Snaxplacename,desc,starttime,endtime,placeID;
+    int Availability=0;
+    double latitude,longitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,7 +127,15 @@ public class AddSnackPlace extends AppCompatActivity implements GoogleApiClient.
                 .addOnConnectionFailedListener(this)
                 .build();
 
-        Button btnpickplace = (Button) findViewById(R.id.btnpickplace);
+        RatingBar ratingBar = (RatingBar) findViewById(R.id.ratingBar);
+        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            public void onRatingChanged(RatingBar ratingBar, float rating,
+                                        boolean fromUser) {
+
+                SnaxPlacerating = rating;
+
+            }
+        });
         etstarttime = (EditText) findViewById(R.id.etstarttime);
         etendtime = (EditText) findViewById(R.id.etendtime);
 
@@ -155,6 +179,7 @@ public class AddSnackPlace extends AppCompatActivity implements GoogleApiClient.
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        Button btnpickplace = (Button) findViewById(R.id.btnpickplace);
         btnpickplace.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -359,6 +384,7 @@ public class AddSnackPlace extends AppCompatActivity implements GoogleApiClient.
                 Place place = PlacePicker.getPlace(this, data);
                 String toastMsg = String.format("Place: %s selected", place.getName());
                 latlang = place.getLatLng();
+                placeID=place.getId();
                 Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
                 onMapReady(mapFragment.getMap());
 
@@ -434,10 +460,107 @@ public class AddSnackPlace extends AppCompatActivity implements GoogleApiClient.
             case android.R.id.home:
                 finish();
                 return true;
-            case R.id.action_settings:
+            case R.id.action_accept:
+                final CharSequence[] items = {"OK","Cancel"};
+                AlertDialog.Builder builder = new AlertDialog.Builder(AddSnackPlace.this);
+                builder.setTitle("Are you sure you want to submit?");
+                builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        submitTheSnackDetails();
+                    }
+                });
+                builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        dialog.cancel();
+                    }
+                });
+                builder.show();
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+    public void submitTheSnackDetails(){
+        //final variables for submit
+        SnaxStringsMultiSelectionSpinner = multiSelectionSpinner.getSelectedStrings();
+
+        etlandmark = (EditText) findViewById(R.id.etlandmark);
+      landmark = etlandmark.getText().toString();
+
+        EditText etSnaxplacename = (EditText) findViewById(R.id.etSnackplacname);
+         Snaxplacename = etSnaxplacename.getText().toString();
+
+        EditText etdesc = (EditText) findViewById(R.id.etdesc);
+         desc = etdesc.getText().toString();
+
+        RadioGroup rgAvailability = (RadioGroup) findViewById(R.id.rgAvailability);
+        RadioButton rbselected = (RadioButton) findViewById(rgAvailability.getCheckedRadioButtonId());
+        String rbselectedstring = "Weekdays";
+        if(rbselected!=null) {
+           rbselectedstring = rbselected.getText().toString();
+        }
+         Availability=0;
+        if(rbselectedstring.contentEquals("Weekdays")){
+            Availability=0;
+        }else if(rbselectedstring.contentEquals("Weekends")){
+            Availability=1;
+        }else{
+            Availability=2;
+        }
+
+         starttime = etstarttime.getText().toString();
+         endtime = etendtime.getText().toString();
+
+         latitude = latlang.latitude;
+         longitude = latlang.longitude;
+
+        //SnaxPlacerating
+
+        Toast.makeText(this,SnaxStringsMultiSelectionSpinner.toString()+" "+landmark+" "+Snaxplacename+" "+desc+" "+String.valueOf(Availability)+" "+starttime+" "+endtime+" "+latitude+" "+longitude+" "+SnaxPlacerating , Toast.LENGTH_SHORT).show();
+        try {
+            new SubmitSnaxInfoTask().execute();
+        } catch (ApiException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public class SubmitSnaxInfoTask extends BaseAsyncRequest {
+
+        public SubmitSnaxInfoTask() throws ApiException{
+            callerName = "SubmitSnaxInfoTask";//any name
+
+            serviceName = AppConstants.DB_SVC; //dreamfactory service base url
+            endPoint = "tblSnackPlace"; //db table
+
+            verb = "POST"; //type of request
+
+            Tblsnackplace tblsnackplace = new Tblsnackplace();
+            tblsnackplace.SnackPlaceName = Snaxplacename;
+            tblsnackplace.SnackType = SnaxStringsMultiSelectionSpinner.toString();
+            tblsnackplace.Locality = "to be implemented";
+            tblsnackplace.LandMark = landmark;
+            tblsnackplace.Description = desc;
+            tblsnackplace.DaysAvailable =Availability;
+            tblsnackplace.StartTimings = starttime;
+            tblsnackplace.EndTimings = endtime;
+            tblsnackplace.GoogleMapsName="dont know";
+            tblsnackplace.GoogleMapsAddress = "To be extracted";
+            tblsnackplace.GoogleMapsLatitude = latitude;
+            tblsnackplace.GoogleMapsLongitude = longitude;
+            tblsnackplace.ImagePath = "no value";
+            tblsnackplace.PlaceID = placeID;
+
+            requestString = ApiInvoker.serialize(tblsnackplace);
+            // include API key and sessionToken
+            applicationApiKey = AppConstants.API_KEY; //api key required to get the data
+            sessionToken = PrefUtil.getString(getApplicationContext(), AppConstants.SESSION_TOKEN); //sessiontoken
+        }
+
+        @Override
+        protected void onCompletion(boolean success) {
+            Toast.makeText(AddSnackPlace.this, "Snack Place Added", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -530,6 +653,7 @@ public class AddSnackPlace extends AppCompatActivity implements GoogleApiClient.
         multiSelectionSpinner = (MultiSelectionSpinner) findViewById(R.id.mySpinner);
         multiSelectionSpinner.setItems(snackArray);
         //multiSelectionSpinner.setSelection(new int[]{2, 6});
+
     }
 
     @Override

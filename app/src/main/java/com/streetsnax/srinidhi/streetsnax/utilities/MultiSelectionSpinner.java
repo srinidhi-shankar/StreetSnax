@@ -55,6 +55,7 @@ public class MultiSelectionSpinner extends Spinner implements
 
     @Override
     public boolean performClick() {
+        String [] temp_items = new String[_items.length-1];
         alertbuilder.setMultiChoiceItems(_items, mSelection, this);
         _itemsAtStart = getSelectedItemsAsString();
         alertbuilder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
