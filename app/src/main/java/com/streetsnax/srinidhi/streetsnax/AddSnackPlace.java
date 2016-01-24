@@ -83,7 +83,6 @@ public class AddSnackPlace extends AppCompatActivity implements GoogleApiClient.
     private static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100, GALLERY_SELECT_IMAGE_REGUEST_CODE = 200;
     static EditText etstarttime, etendtime;
     static String time;
-    public int imgbtnid;
     ProgressDialog progressDialog;
     GoogleApiClient mGoogleApiClient;
     LatLng latlang = new LatLng(12.9667, 77.5667);//Bangalore
@@ -184,6 +183,7 @@ public class AddSnackPlace extends AppCompatActivity implements GoogleApiClient.
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        Button btnpickplace = (Button) findViewById(R.id.btnpickplace);
         btnpickplace.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -615,24 +615,6 @@ public class AddSnackPlace extends AppCompatActivity implements GoogleApiClient.
         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 
-    public void createSpinner(List<Snack> snackRecords) {
-        String[] snackArray = new String[snackRecords.size()];
-        int count = 0;
-        for (Snack snack : snackRecords) {
-            snackArray[count++] = snack.SnackType;
-        }
-
-        multiSelectionSpinner = (MultiSelectionSpinner) findViewById(R.id.mySpinner);
-        multiSelectionSpinner.setItems(snackArray);
-        //multiSelectionSpinner.setSelection(new int[]{2, 6});
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
 
     public class GetSnackTypeTask extends BaseAsyncRequest {
 

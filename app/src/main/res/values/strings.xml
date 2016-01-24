@@ -3,28 +3,19 @@
     <string name="autocomplete_hint">Search a Place</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_search_scrolling">SearchScrollingActivity</string>
     <string name="large_text">
         TEST
     </string>
-    <string name="title_activity_search_page">Search snack places...</string>
 
     <string name="action_Submit">Submit</string>
 
     <string name="title_activity_search_scrolling">SearchScrollingActivity</string>
     <string name="title_activity_search_page">Search snack places...</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_accept">action_accept</string>
 
-    <string name="title_activity_splash_screen">SplashScreenActivity</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
 
-    <string name="snack_types_available"><b>SNACKS AVAILABLE</b></string>
-    <string name="timings"><b>TIMING</b></string>
-    <string name="ratings_reviews"><b>RATINGS/REVIEWS</b></string>
-    <string name="locate_us"><b>LOCATE US</b></string>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
