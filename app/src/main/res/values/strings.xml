@@ -38,4 +38,5 @@
     <string name="showcase_text_submitsnack">Found a new snack place? Please feed us the data</string>
     <string name="showcase_title_searchsnack"><b>Search your favourite snack</b></string>
     <string name="showcase_text_searchsnack">Find your nearest snack place</string>
+    <string name="streetsnaxname">Streetsnax</string>
 </resources>
