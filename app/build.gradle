@@ -24,14 +24,14 @@ android {
         config {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
-            storeFile file('C:/Users/i15230/.android/debug.keystore')
+            storeFile file('C:/Users/i16881/.android/debug.keystore')
             storePassword 'android'
         }
     }
     compileSdkVersion 23
     buildToolsVersion '23.0.2'
     defaultConfig {
-        applicationId "com.streetsnax.srinidhi.streetsnax"
+        applicationId "com.streetsnax.srinidhi.streetsnaxs"
         minSdkVersion 19
         targetSdkVersion 23
         versionCode 1

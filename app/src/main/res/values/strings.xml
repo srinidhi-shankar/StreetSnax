@@ -3,11 +3,18 @@
     <string name="autocomplete_hint">Search a Place</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_search_scrolling">SearchScrollingActivity</string>
     <string name="large_text">
         TEST
     </string>
+
+    <string name="action_Submit">Submit</string>
+
+    <string name="title_activity_search_scrolling">SearchScrollingActivity</string>
     <string name="title_activity_search_page">Search snack places...</string>
+
+    <string name="action_accept">action_accept</string>
+
+
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
