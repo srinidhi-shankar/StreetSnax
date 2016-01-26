@@ -43,6 +43,7 @@ import com.streetsnax.srinidhi.streetsnax.adapters.ItemListBaseAdapter;
 import com.streetsnax.srinidhi.streetsnax.adapters.PlacesAutoCompleteAdapter;
 import com.streetsnax.srinidhi.streetsnax.models.Snack;
 import com.streetsnax.srinidhi.streetsnax.models.Snacks;
+import com.streetsnax.srinidhi.streetsnax.models.TblSnackPlaces;
 import com.streetsnax.srinidhi.streetsnax.utilities.AppConstants;
 import com.streetsnax.srinidhi.streetsnax.utilities.ItemDetails;
 import com.streetsnax.srinidhi.streetsnax.utilities.MultiSelectionSpinner;
@@ -90,6 +91,7 @@ public class SearchPageActivity extends AppCompatActivity
     private String placeAddress;
     private SearchBundleData searchBundleData;
     private RelativeLayout layoutGoogleAutocomplete;
+    private TblSnackPlaces TblSnackRecords;
     //endregion
 
     @Override
@@ -151,8 +153,10 @@ public class SearchPageActivity extends AppCompatActivity
                                 //placeAddress = places.get(0).getAddress().toString();
                                 //setTitle(places.get(0).getName());
                                 mPlace.setText("");
-                                if (snackHorizontalScrollView.getVisibility() == View.VISIBLE)
-                                    GetSnackResults(multiSelectionSpinner.getSelectedStrings());
+                                if (snackHorizontalScrollView.getVisibility() == View.VISIBLE) {
+                                    //GetSnackResults(multiSelectionSpinner.getSelectedStrings());
+                                    new GetSnackPlaceTask().execute();
+                                }
                             } else {
                                 Toast.makeText(getApplicationContext(), AppConstants.SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show();
                             }
@@ -175,7 +179,8 @@ public class SearchPageActivity extends AppCompatActivity
                 } else {
                     snackHorizontalScrollView.setVisibility(View.VISIBLE);
                     textViewTitle.setVisibility(View.INVISIBLE);
-                    GetSnackResults(multiSelectionSpinner.getSelectedStrings());
+                    new GetSnackPlaceTask().execute();
+                    //GetSnackResults(multiSelectionSpinner.getSelectedStrings());
                     snackHorizontalScrollView.fullScroll(HorizontalScrollView.FOCUS_LEFT);
                 }
                 //searchLayoutView.setVisibility(View.INVISIBLE);
@@ -212,7 +217,8 @@ public class SearchPageActivity extends AppCompatActivity
             textViewTitle.setVisibility(View.INVISIBLE);
             textViewTitle.setText(searchBundleData.getsnackTypes());
             snackHorizontalScrollView.fullScroll(HorizontalScrollView.FOCUS_LEFT);
-            GetSnackResults(new ArrayList<>(Arrays.asList(searchBundleData.getsnackTypes().split(","))));
+            //GetSnackResults(new ArrayList<>(Arrays.asList(searchBundleData.getsnackTypes().split(","))));
+            new GetSnackPlaceTask().execute();
         }
 
         searchListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -236,7 +242,21 @@ public class SearchPageActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    private void GetSnackResults(List<String> snackList) {
+    private void DisplaySnackPlaceRecords(TblSnackPlaces snackrecords) {
+        setTitle(snackrecords.snackrecord.get(0).GoogleMapsAddress);
+        placeAddress = snackrecords.snackrecord.get(0).GoogleMapsAddress;
+        //latlong = snackrecords.snackrecord.get(0).GoogleMapsLatitude
+        textViewHiddenPlaceID.setText(snackrecords.snackrecord.get(0).PlaceID);
+        snackLayout.setVisibility(View.VISIBLE);
+        //multiSelectionSpinner.setSelection(new ArrayList<>(Arrays.asList(searchBundleData.getsnackTypes().split(","))));
+        snackHorizontalScrollView.setVisibility(View.VISIBLE);
+        textViewTitle.setVisibility(View.INVISIBLE);
+        textViewTitle.setText(snackrecords.snackrecord.get(0).SnackType);
+        snackHorizontalScrollView.fullScroll(HorizontalScrollView.FOCUS_LEFT);
+        GetSnackResults(new ArrayList<>(Arrays.asList(snackrecords.snackrecord.get(0).SnackType.split(","))), snackrecords);
+    }
+
+    private void GetSnackResults(List<String> snackList, TblSnackPlaces snackRecords) {
         //List<String> snackList = multiSelectionSpinner.getSelectedStrings();
         if (snackLayoutLinear.getChildCount() > 0)
             snackLayoutLinear.removeAllViews();
@@ -251,7 +271,7 @@ public class SearchPageActivity extends AppCompatActivity
             rowTextView.setBackgroundResource(R.drawable.tags);
             snackLayoutLinear.addView(rowTextView);
         }
-        item_details = GetSearchResults(placeAddress, textViewTitle.getText().toString());
+        item_details = GetSearchResults(snackRecords);
         searchListView.setAdapter(new ItemListBaseAdapter(SearchPageActivity.this, item_details));
         searchPageProgressBar.setVisibility(View.INVISIBLE);
     }
@@ -465,17 +485,17 @@ public class SearchPageActivity extends AppCompatActivity
         //multiSelectionSpinner.setSelection(new int[]{2, 6});
     }
 
-    private ArrayList<ItemDetails> GetSearchResults(String locationAddress, String snackType) {
+    private ArrayList<ItemDetails> GetSearchResults(TblSnackPlaces snackRecords) {
         ArrayList<ItemDetails> results = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < snackRecords.snackrecord.size(); i++) {
             ItemDetails itemDetails = new ItemDetails();
-            String imageSrc = "http://lorempixel.com/400/200/food/SnackPlaceName" + i;
+            String imageSrc = "http://lorempixel.com/400/200/food/" + snackRecords.snackrecord.get(i).SnackPlaceName;
             itemDetails.setItemImageSrc(imageSrc);
-            itemDetails.setplaceAddress(locationAddress);
-            itemDetails.setsnackType(snackType);
-            itemDetails.setplaceID(textViewHiddenPlaceID.getText().toString());
-            itemDetails.setlatlong(latlong);
-            itemDetails.setsnackPlaceName("SnackPlaceName #" + i);
+            itemDetails.setplaceAddress(snackRecords.snackrecord.get(i).GoogleMapsAddress);
+            itemDetails.setsnackType(snackRecords.snackrecord.get(i).SnackType);
+            itemDetails.setplaceID(snackRecords.snackrecord.get(i).PlaceID);
+            itemDetails.setlatlong("lat/lng:{" + snackRecords.snackrecord.get(i).GoogleMapsLatitude + "," + snackRecords.snackrecord.get(i).GoogleMapsLongitude + ")");
+            itemDetails.setsnackPlaceName(snackRecords.snackrecord.get(i).SnackPlaceName);
             results.add(itemDetails);
         }
 
@@ -530,4 +550,49 @@ public class SearchPageActivity extends AppCompatActivity
         }
     }
     //endregion
+
+    public class GetSnackPlaceTask extends BaseAsyncRequest {
+
+        private TblSnackPlaces snackRecords;
+
+        public GetSnackPlaceTask() {
+            callerName = "GetSnackPlaceTask";//any name
+
+            serviceName = AppConstants.DB_SVC; //dreamfactory service base url
+            endPoint = "tblSnackPlace"; //db table
+
+            verb = "GET"; //type of request
+
+            queryParams = new HashMap<>();
+            // filter to only the contact_info records related to the contact
+            queryParams.put("filter", "PlaceID='" + textViewHiddenPlaceID.getText() + "'"); //where conditions
+
+            // include API key and sessionToken
+            applicationApiKey = AppConstants.API_KEY; //api key required to get the data
+            sessionToken = PrefUtil.getString(getApplicationContext(), AppConstants.SESSION_TOKEN); //sessiontoken
+        }
+
+        @Override
+        protected void processResponse(String response) throws ApiException {
+            // results come back as an array of contact_info records
+            // form is:
+            // {
+            //      "resource":[
+            //          { contactInfoRecord }
+            //      ]
+            // }
+            snackRecords = (TblSnackPlaces) ApiInvoker.deserialize(response, "", TblSnackPlaces.class);
+        }
+
+        @Override
+        protected void onCompletion(boolean success) {
+            if (success) {
+                if (snackRecords.snackrecord.size() > 0) {
+                    TblSnackRecords = snackRecords;
+                    DisplaySnackPlaceRecords(snackRecords);
+                }
+
+            }
+        }
+    }
 }
