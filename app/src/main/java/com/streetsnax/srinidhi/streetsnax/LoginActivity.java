@@ -3,15 +3,21 @@ package com.streetsnax.srinidhi.streetsnax;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,6 +27,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.Profile;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.squareup.picasso.Picasso;
 import com.streetsnax.srinidhi.streetsnax.models.Users;
 import com.streetsnax.srinidhi.streetsnax.utilities.AppConstants;
@@ -28,8 +43,10 @@ import com.streetsnax.srinidhi.streetsnax.utilities.PasswordHash;
 import com.streetsnax.srinidhi.streetsnax.utilities.PrefUtil;
 
 import java.io.InputStream;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import dfapi.ApiException;
@@ -48,11 +65,27 @@ public class LoginActivity extends AppCompatActivity {
     ProgressDialog progressDialog;
     private ViewFlipper mViewFlipper;
     private GestureDetector mGestureDetector;
+    Button _fbLoginButton;
+    private CallbackManager mFacebookCallbackManager;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
+
+        mFacebookCallbackManager = CallbackManager.Factory.create();
+
+        registerFBCallback();
+        setupFBLoginButton();
+
+        if (isFBLoggedIn()) {
+            finish();
+            Intent intentmainActivity = new Intent(getApplicationContext(), SearchSubmitChooseActivity.class);
+            startActivity(intentmainActivity);
+        }
+
         _emailText = (EditText) findViewById(R.id.input_email);
         _passwordText = (EditText) findViewById(R.id.input_password);
         _loginButton = (Button) findViewById(R.id.btn_login);
@@ -70,6 +103,9 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Start the Signup activity
                 Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
+                // Add code to print out the key hash
+                //   Intent intent = new Intent(getApplicationContext(), FacebookLoginFragment.class);
+
                 startActivityForResult(intent, REQUEST_SIGNUP);
             }
         });
@@ -110,6 +146,51 @@ public class LoginActivity extends AppCompatActivity {
         mGestureDetector = new GestureDetector(this, customGestureDetector);
     }
 
+    public boolean isFBLoggedIn() {
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        return accessToken != null;
+    }
+
+
+    public void registerFBCallback(){
+        LoginManager.getInstance().registerCallback(mFacebookCallbackManager,
+                new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+                        Log.d("FBlogin", "onSuccess");
+                        AccessToken accessToken = loginResult.getAccessToken();
+                        Profile profile = Profile.getCurrentProfile();
+                        Intent intentmainActivity = new Intent(getApplicationContext(), SearchSubmitChooseActivity.class);
+                        Toast.makeText(LoginActivity.this, "Facebook signin success", Toast.LENGTH_SHORT).show();
+                        finish();
+                        startActivity(intentmainActivity);
+
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        Toast.makeText(LoginActivity.this, "Facebook signin cancel", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onError(FacebookException exception) {
+                        Toast.makeText(LoginActivity.this, exception.toString(), Toast.LENGTH_SHORT).show();
+                        Log.e("FBError",exception.toString());
+                    }
+                });
+    }
+
+    private void setupFBLoginButton() {
+
+        _fbLoginButton = (Button) findViewById(R.id.fblogin_buttonloginpage);
+        _fbLoginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this, Arrays.asList("public_profile", "user_friends"));
+            }
+        });
+    }
+
     public void login() {
         Log.d(TAG, "Login");
 
@@ -118,7 +199,6 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        _loginButton.setEnabled(false);
 
         progressDialog = new ProgressDialog(LoginActivity.this,
                 R.style.MyMaterialTheme);
@@ -136,6 +216,9 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mFacebookCallbackManager.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == REQUEST_SIGNUP) {
             if (resultCode == RESULT_OK) {
                 // TODO: Implement successful signup logic here
@@ -144,7 +227,10 @@ public class LoginActivity extends AppCompatActivity {
                 this.finish();
             }
         }
+
+
     }
+
 
     @Override
     public void onBackPressed() {
