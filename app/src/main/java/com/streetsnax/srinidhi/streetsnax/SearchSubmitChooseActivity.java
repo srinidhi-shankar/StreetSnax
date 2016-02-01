@@ -157,6 +157,7 @@ public class SearchSubmitChooseActivity extends AppCompatActivity implements Goo
                     textViewTitle.setVisibility(View.INVISIBLE);
                     GetSnackResults();
                     snackHorizontalScrollView.fullScroll(HorizontalScrollView.FOCUS_LEFT);
+
                     SearchBundleData searchBundleData = new SearchBundleData();
                     searchBundleData.setlatlong(latlong);
                     searchBundleData.setplaceID(textViewHiddenPlaceID.getText().toString());
@@ -457,5 +458,4 @@ public class SearchSubmitChooseActivity extends AppCompatActivity implements Goo
             }
         }
     }
-
 }

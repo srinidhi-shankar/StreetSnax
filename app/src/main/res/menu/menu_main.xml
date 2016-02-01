@@ -7,6 +7,6 @@
     <item
         android:id="@+id/action_accept"
         android:title="@string/action_accept"
-        android:icon="@drawable/ic_action_accept"
+
         app:showAsAction="always" />
 </menu>
