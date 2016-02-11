@@ -37,11 +37,12 @@ public class SignupActivity extends AppCompatActivity {
     TextView _loginLink;
     ProgressDialog progressDialog;
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_signup);
-        //ButterKnife.bind(this);
 
         _nameText = (EditText) findViewById(R.id.input_name);
         _emailText = (EditText) findViewById(R.id.input_email);
@@ -65,7 +66,10 @@ public class SignupActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+
     }
+
 
     public void signup() {
         Log.d(TAG, "Signup");

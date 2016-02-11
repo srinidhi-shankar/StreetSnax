@@ -52,7 +52,7 @@ android {
         javaMaxHeapSize "4g"
     }
 }
-
+repositories { mavenCentral() }
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
@@ -73,4 +73,5 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'net.sf.sprockets:sprockets-android:3.0.0'
     compile 'com.github.amlcurran.showcaseview:library:5.4.0'
+    compile 'com.facebook.android:facebook-android-sdk:4.6.0'
 }
