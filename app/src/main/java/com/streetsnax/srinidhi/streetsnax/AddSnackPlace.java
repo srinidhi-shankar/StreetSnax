@@ -10,18 +10,10 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v4.app.DialogFragment;
-import android.app.FragmentManager;
-import android.app.ProgressDialog;
-import android.app.TimePickerDialog;
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateFormat;
@@ -32,7 +24,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RatingBar;
@@ -59,9 +50,7 @@ import com.streetsnax.srinidhi.streetsnax.models.Snacks;
 import com.streetsnax.srinidhi.streetsnax.models.Tblsnackplace;
 import com.streetsnax.srinidhi.streetsnax.utilities.AppConstants;
 import com.streetsnax.srinidhi.streetsnax.utilities.MultiSelectionSpinner;
-import com.streetsnax.srinidhi.streetsnax.utilities.PrefUtil;
-import com.streetsnax.srinidhi.streetsnax.utilities.AppConstants;
-import com.streetsnax.srinidhi.streetsnax.utilities.MultiSelectionSpinner;
+import com.streetsnax.srinidhi.streetsnax.utilities.PhotoUploadConfig;
 import com.streetsnax.srinidhi.streetsnax.utilities.PrefUtil;
 
 import java.io.File;
@@ -71,7 +60,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import dfapi.ApiException;
 import dfapi.ApiInvoker;
@@ -83,25 +71,53 @@ public class AddSnackPlace extends AppCompatActivity implements GoogleApiClient.
     private static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100, GALLERY_SELECT_IMAGE_REGUEST_CODE = 200;
     static EditText etstarttime, etendtime;
     static String time;
+    public int imgbtnid;
     ProgressDialog progressDialog;
     GoogleApiClient mGoogleApiClient;
     LatLng latlang = new LatLng(12.9667, 77.5667);//Bangalore
     MapFragment mapFragment;
     Marker marker;
     ImageButton ibaddpic1, ibaddpic2, ibaddpic3, ibaddpic4;
-    private MultiSelectionSpinner multiSelectionSpinner;
-    private int PLACE_PICKER_REQUEST = 1;
-    private Toolbar mToolbar;
-    private Uri fileUri; // file url to store image/video
-    public int imgbtnid;
     EditText etlandmark;
     float SnaxPlacerating=0;
-
     //final variables for submit
     List<String> SnaxStringsMultiSelectionSpinner;
     String landmark,Snaxplacename,desc,starttime,endtime,placeID;
     int Availability=0;
     double latitude,longitude;
+    private MultiSelectionSpinner multiSelectionSpinner;
+    private int PLACE_PICKER_REQUEST = 1;
+    private Toolbar mToolbar;
+    private Uri fileUri; // file url to store image/video
+
+    private static File getOutputImageFile() {
+
+        // External sdcard location
+        File mediaStorageDir = new File(
+                Environment
+                        .getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+                PhotoUploadConfig.IMAGE_DIRECTORY_NAME);
+
+        // Create the storage directory if it does not exist
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                Log.d("Photo Upload", "Oops! Failed create "
+                        + PhotoUploadConfig.IMAGE_DIRECTORY_NAME + " directory");
+                return null;
+            }
+        }
+
+        // Create a media file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
+                Locale.getDefault()).format(new Date());
+        File mediaFile;
+
+        mediaFile = new File(mediaStorageDir.getPath() + File.separator
+                + "IMG_" + timeStamp + ".jpg");
+
+
+        return mediaFile;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -274,7 +290,6 @@ public class AddSnackPlace extends AppCompatActivity implements GoogleApiClient.
 
     }
 
-
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -292,7 +307,6 @@ public class AddSnackPlace extends AppCompatActivity implements GoogleApiClient.
         fileUri = savedInstanceState.getParcelable("file_uri");
     }
 
-
     private void previewImage() {
 
         ImageButton ib = (ImageButton) findViewById(imgbtnid);
@@ -309,7 +323,6 @@ public class AddSnackPlace extends AppCompatActivity implements GoogleApiClient.
         ib.setImageBitmap(bitmap);
 
     }
-
 
     private void captureImage() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -335,35 +348,6 @@ public class AddSnackPlace extends AppCompatActivity implements GoogleApiClient.
 
     public Uri getOutputImageFileUri() {
         return Uri.fromFile(getOutputImageFile());
-    }
-
-    private static File getOutputImageFile() {
-
-        // External sdcard location
-        File mediaStorageDir = new File(
-                Environment
-                        .getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                PhotoUploadConfig.IMAGE_DIRECTORY_NAME);
-
-        // Create the storage directory if it does not exist
-        if (!mediaStorageDir.exists()) {
-            if (!mediaStorageDir.mkdirs()) {
-                Log.d("Photo Upload", "Oops! Failed create "
-                        + PhotoUploadConfig.IMAGE_DIRECTORY_NAME + " directory");
-                return null;
-            }
-        }
-
-        // Create a media file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
-                Locale.getDefault()).format(new Date());
-        File mediaFile;
-
-        mediaFile = new File(mediaStorageDir.getPath() + File.separator
-                + "IMG_" + timeStamp + ".jpg");
-
-
-        return mediaFile;
     }
 
     @Override
@@ -544,6 +528,59 @@ public class AddSnackPlace extends AppCompatActivity implements GoogleApiClient.
         }
     }
 
+    @Override
+    public void onConnected(Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        float zoomlevel = 15;
+        if (marker != null) {
+            marker.remove();
+        } else {
+            zoomlevel = 12;
+        }
+        marker = googleMap.addMarker(new MarkerOptions()
+                .position(latlang)
+                .title("Snack Place"));
+
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(
+                latlang).zoom(zoomlevel).build();
+
+        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+    }
+
+    public void createSpinner(List<Snack> snackRecords) {
+        String[] snackArray = new String[snackRecords.size()];
+        int count = 0;
+        for (Snack snack : snackRecords) {
+            snackArray[count++] = snack.SnackType;
+        }
+
+        multiSelectionSpinner = (MultiSelectionSpinner) findViewById(R.id.mySpinner);
+        multiSelectionSpinner.setItems(snackArray);
+        //multiSelectionSpinner.setSelection(new int[]{2, 6});
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
     public class SubmitSnaxInfoTask extends BaseAsyncRequest {
 
         public SubmitSnaxInfoTask() throws ApiException{
@@ -581,40 +618,6 @@ public class AddSnackPlace extends AppCompatActivity implements GoogleApiClient.
             Toast.makeText(AddSnackPlace.this, "Snack Place Added", Toast.LENGTH_LONG).show();
         }
     }
-
-    @Override
-    public void onConnected(Bundle bundle) {
-
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        float zoomlevel = 15;
-        if (marker != null) {
-            marker.remove();
-        } else {
-            zoomlevel = 12;
-        }
-        marker = googleMap.addMarker(new MarkerOptions()
-                .position(latlang)
-                .title("Snack Place"));
-
-        CameraPosition cameraPosition = new CameraPosition.Builder().target(
-                latlang).zoom(zoomlevel).build();
-
-        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-    }
-
 
     public class GetSnackTypeTask extends BaseAsyncRequest {
 
@@ -660,26 +663,6 @@ public class AddSnackPlace extends AppCompatActivity implements GoogleApiClient.
 
             }
         }
-    }
-
-    public void createSpinner(List<Snack> snackRecords) {
-        String[] snackArray = new String[snackRecords.size()];
-        int count = 0;
-        for (Snack snack : snackRecords) {
-            snackArray[count++] = snack.SnackType;
-        }
-
-        multiSelectionSpinner = (MultiSelectionSpinner) findViewById(R.id.mySpinner);
-        multiSelectionSpinner.setItems(snackArray);
-        //multiSelectionSpinner.setSelection(new int[]{2, 6});
-
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
     }
 
 }
