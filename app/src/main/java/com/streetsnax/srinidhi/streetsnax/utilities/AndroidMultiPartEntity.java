@@ -1,4 +1,4 @@
-package com.streetsnax.srinidhi.streetsnax;
+package com.streetsnax.srinidhi.streetsnax.utilities;
 
 /**
  * Created by I16881 on 03-Jan-16.
@@ -41,7 +41,7 @@ public class AndroidMultiPartEntity extends MultipartEntity
         super.writeTo(new CountingOutputStream(outstream, this.listener));
     }
 
-    public static interface ProgressListener {
+    public interface ProgressListener {
         void transferred(long num);
     }
 
